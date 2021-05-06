@@ -1,6 +1,6 @@
 <?php
-$host = 'localhost:3306';
-$database = 'Metrology';
-$user = 'root'; 
-$password = '02047776'; 
+$host = 'eu-cdbr-west-01.cleardb.com';
+$database = 'heroku_085b624a0702fa1';
+$user = 'b7cbcb7edb2bbf'; 
+$password = '5cbfaa59';
 ?>

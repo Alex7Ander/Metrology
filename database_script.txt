@@ -1,3 +1,0 @@
-create database Metrology;
-
-create table works (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, work_index INT UNSIGNED, device_type CHAR(255), device_serial_number CHAR(64), device_etalon_type CHAR(64), verificator CHAR(255), manager CHAR(255), temperature DOUBLE, humidity DOUBLE, preasure DOUBLE);

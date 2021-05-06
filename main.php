@@ -27,12 +27,12 @@
                 <table style="width:100%">
                     <tr>
                         <th>id</th>
+                        <th>Поверитель</th>
+                        <th>Отв. за закрытие</th>
                         <th>Номер работы</th>
                         <th>Тип прибора</th>
                         <th>зав. №</th>
-                        <th>Место по повер. схеме</th>
-                        <th>Поверитель</th>
-                        <th>Отв. за закрытие</th>
+                        <th>Место по повер. схеме</th>                        
                         <th>Температура</th>
                         <th>Влажность</th>
                         <th>Давление</th>
@@ -43,9 +43,26 @@
             <?php
                 foreach($result as $record){
                     echo "<tr>";
-                    foreach($record as $value){
+                    $id = $record['id'];
+                    $protLink = $record['protocolLink'];
+                    $docLink = $record['documentLink'];
+                    foreach($record as $key=>$value){
+                        if($key == 'protocolLink') break;
                         echo "<td>$value</td>";
                     }
+                    if($protLink != ""){
+                        echo "<td style=\"text-align: center;\"><a href='$protLink'>Протокол</a></td>";
+                    }
+                    else{
+                        echo "<td style=\"text-align: center;\">-</td>";
+                    }
+                    if($docLink != ""){
+                        echo "<td style=\"text-align: center;\"><a href='$docLink'>Документ</a></td>";
+                    }
+                    else{
+                        echo "<td style=\"text-align: center;\">-</td>";
+                    }
+                    echo "<td><input type='button' name='$id'></td>";
                     echo "</tr>";
                 }
                 echo"</table>";                

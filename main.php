@@ -14,7 +14,8 @@
             <h1>Распределение метрологических работ - Главная</h1>
         </div>
         <div>
-            <a href="/metrology/add.php">Добавить работу</a>
+            <a href="/metrology/add.php">Добавить работу</a><br>
+            <a href="/metrology/workersList.php">Список работников</a>
         </div>
         <div>
             <?php

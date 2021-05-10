@@ -15,7 +15,9 @@
         </div>
         <div>
             <a href="/metrology/add.php">Добавить работу</a><br>
-            <a href="/metrology/workersList.php">Список работников</a>
+            <a href="/metrology/workersList.php">Список работников</a><br>
+            <a href="/metrology/devices.php">Приборы (для поверки)</a><br>
+            <a href="/metrology/addDevice.php">Добавить прибор (для поверки)</a>
         </div>
         <div>
             <?php

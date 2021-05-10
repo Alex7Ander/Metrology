@@ -2,29 +2,38 @@
 require_once "worker.php";
 class workerRepository{
     
-    private $link;
+    private $mysqli;
 
     public function __construct($host, $user, $password, $database){
-        $this->link = mysqli_connect($host, $user, $password, $database) or die("Error: creation object of workerRepository class failed " . mysqli_error($link));
-        mysqli_set_charset($this->link, 'utf8');
+        $this->mysqli = new mysqli($host, $user, $password, $database);
+        if ($this->mysqli->connect_error) {
+            die("Error: creation object of workerRepository class failed (" . $this->mysqli->connect_errno . " - ". $this->mysqli->connect_error . ")");
+        }
+        $this->mysqli->set_charset('utf8');
     }
 
     public function getAll(){
         $query = "SELECT * FROM staff";
-        $result = mysqli_query($this->link, $query) or die("Error: execution of: $query -  failde " . mysqli_error($this->link));  
-        return $this->getWorkersFromResult($result);
+        $result = $this->mysqli->query($query);      
+        $workers = $this->getWorkersFromResult($result);
+        $result->close();
+        return $workers;
     }
 
     public function getVerificators(){
         $query = "SELECT * FROM staff WHERE verificator_status = TRUE";
-        $result = mysqli_query($this->link, $query) or die("Error: execution of: $query -  failde " . mysqli_error($this->link));
-        return $this->getWorkersFromResult($result);
+        $result = $this->mysqli->query($query);
+        $verificators = $this->getWorkersFromResult($result);
+        $result->close();
+        return $verificators;
     }
 
     public function getManagers(){
         $query = "SELECT * FROM staff WHERE manager_status = TRUE";
-        $result = mysqli_query($this->link, $query) or die("Error: execution of: $query -  failde " . mysqli_error($this->link));
-        return $this->getWorkersFromResult($result);
+        $result = $this->mysqli->query($query);
+        $managers = $this->getWorkersFromResult($result);
+        $result->close();
+        return $managers;
     }
 
     private function getWorkersFromResult($result){

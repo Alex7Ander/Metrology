@@ -26,13 +26,11 @@
             require "deviceRepository.php";
             require "connection_config.php";
                 if(isset($_REQUEST['save'])){
-                    echo "Start";
                     $deviceGroup = $_POST['device_group'];
                     $deviceType = $_POST['device_type'];
                     $serialNumber = $_POST['serial_number'];
                     $stateRegisterNumber = $_POST['state_register_number'];
                     $device = new Device($deviceGroup, $deviceType, $serialNumber, $stateRegisterNumber);
-                    echo $device;
                     $deviceRepo = new deviceRepository($host, $user, $password, $database);
                     $deviceRepo->save($device);
                 }

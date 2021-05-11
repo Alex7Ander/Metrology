@@ -15,23 +15,29 @@
             <form action="save.php">
                 <?php
                     require_once "connection_config.php";
-                    $link = mysqli_connect($host, $user, $password, $database) or die("Error: " . mysqli_error($link));
-                    mysqli_set_charset($link, 'utf8');
-                    $query = "SELECT * FROM staff";
-                    $result = mysqli_query($link, $query) or die("Error: " . mysqli_error($link));
-                    $verificators = [];
-                    $managers = [];
-                    foreach($result as $value){
-                        $id = $value['id'];
-                        $fullname = $value['surname'] . " " . $value['name'] . " " . $value['patronimyc'];
-                        if($value['verificator_status']) $verificators[$id] = $fullname;
-                        if($value['manager_status']) $managers[$id] = $fullname;
-                    }
+
                 ?>
 
                 <table>
-                    <tr><td><label for="varification_date">Дата поверки:</label></td><td><input type="date" name="varification_date"></td></tr>
-                    <tr><td><label for="device_type">Тип прибора:</label></td><td><input type="text" name="device_type"></td></tr>
+                    <tr>
+                        <td>
+                            <label for="varification_date">Дата поверки:</label>
+                        </td>
+                        <td>
+                            <input type="date" name="varification_date">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="device_type">Прибор:</label>
+                        </td>
+                        <td><select name="managerId"><?php 
+                                foreach($managers as $managerId => $manager){
+                                    echo "<option value=\"$managerId\">$manager</option>";
+                                }
+                            ?>
+                        </td>
+                    </tr>
                     <tr><td><label for="device_serial_number">Серийный номер:</label></td><td><input type="text" name="device_serial_number"></td></tr>
                     <tr><td><label for="device_etalon_type">Место в поверочной схеме:</label></td><td>
                     <select name="device_etalon_type">

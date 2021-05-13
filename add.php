@@ -12,28 +12,83 @@
             <a href="/metrology/main.php">На главную</a>
         </div>
         <div>
-            <form action="save.php">
+            <form action="add.php" method="POST">
                 <?php
                     require_once "connection_config.php";
+                    require_once "workerRepository.php";
+                    require_once "deviceRepository.php";
+                    require_once "workRepository.php";
+                    require_once "work.php";
+                    $workerRepo = new WorkerRepository($host, $user, $password, $database);
+                    $deviceRepo = new Devicerepository($host, $user, $password, $database);
+                    $workRepo = new WorkRepository($host, $user, $password, $database);
+                    $verificators = $workerRepo->getVerificators();
+                    $managers = $workerRepo->getManagers();
+                    $devices = $deviceRepo->getAll();
+                    if(isset($_REQUEST['save'])){
+                        $requestNumber = $_REQUEST['request_number'];
+                        $accountNumber = $_REQUEST['account_number'];                         
+                        $deviceId= $_REQUEST['device_id'];
+                        $device = $devices["$deviceId"];
+                        
+                        $verificatorId = $_REQUEST['verificator_id'];
+                        $verificator = $verificators["$verificatorId"];
+                        $managerId = $_REQUEST['manager_id'];
+                        $manager = $managers["$managerId"];
 
+                        $verificationDate = $_REQUEST['verification_date'];
+                        $deviceEtalonType = $_REQUEST['device_etalon_type'];
+                        $temperature = $_REQUEST['temperature'];
+                        $humidity = $_REQUEST['humidity'];
+                        $preasure = $_REQUEST['preasure'];
+
+                        $work = new Work($device, $requestNumber, $accountNumber);
+                        $work->setVerificator($verificator);
+                        $work->setManager($manager);
+                        $work->setVerificationDate($verificationDate);
+                        $work->setEtalonType($deviceEtalonType);
+                        $work->setTemperature($temperature);
+                        $work->setHumidity($humidity);
+                        $work->setPreasure($preasure);
+                        $work->setDocumentLink(null);
+                        $work->setprotocolLink(null);
+                        
+                        $workRepo->save($work);
+                    }
                 ?>
 
                 <table>
                     <tr>
                         <td>
-                            <label for="varification_date">Дата поверки:</label>
+                            <label for="verification_date">Дата поверки:</label>
                         </td>
                         <td>
-                            <input type="date" name="varification_date">
+                            <input type="date" name="verification_date">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="request_number">Номер заявки:</label>
+                        </td>
+                        <td>
+                            <input type="text" name="request_number">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="account_number">Номер счета:</label>
+                        </td>
+                        <td>
+                            <input type="text" name="account_number">
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <label for="device_type">Прибор:</label>
                         </td>
-                        <td><select name="managerId"><?php 
-                                foreach($managers as $managerId => $manager){
-                                    echo "<option value=\"$managerId\">$manager</option>";
+                        <td><select name="device_id"><?php 
+                                foreach($devices as $deviceId => $device){
+                                    echo "<option value=\"$deviceId\">$device</option>";
                                 }
                             ?>
                         </td>
@@ -46,8 +101,11 @@
                         <option>Эталон 1-го разряда</option>
                         <option>Вторичный эталон</option>
                     </select></td></tr>
-                    <tr><td><label for="verificatorId">Поверитель:</label></td>
-                        <td><select name="verificatorId"><?php 
+                    <tr>
+                    	<td>
+                    		<label for="verificator_id">Поверитель:</label>
+                    	</td>
+                        <td><select name="verificator_id"><?php 
                                 foreach($verificators as $verificatorId => $verificator){
                                     echo "<option value=\"$verificatorId\">$verificator</option>";
                                 }
@@ -57,8 +115,8 @@
                     <tr><td><label for="temperature">Температура:</label></td><td><input type="text" name="temperature" ></td></tr>
                     <tr><td><label for="humidity">Влажность:</label></td><td><input type="text" name="humidity"></td></tr>
                     <tr><td><label for="preasure">Атмосферное давление:</label></td><td><input type="text" name="preasure"></td></tr>
-                    <tr><td><label for="managerId">Ответственный за закрытие работы:</label></td>
-                        <td><select name="managerId"><?php 
+                    <tr><td><label for="manager_id">Ответственный за закрытие работы:</label></td>
+                        <td><select name="manager_id"><?php 
                                 foreach($managers as $managerId => $manager){
                                     echo "<option value=\"$managerId\">$manager</option>";
                                 }
@@ -66,7 +124,7 @@
                         </td>
                     </tr>
                 </table>
-                <input type="submit" value="Отправить данные">
+                <input type="submit" name="save" value="Отправить данные">
             </form>
         </div>
     </body>

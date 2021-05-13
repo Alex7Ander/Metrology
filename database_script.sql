@@ -1,4 +1,7 @@
-CREATE DATABASE Metrology;
+DROP TABLE IF EXISTS works;
+DROP TABLE IF EXISTS devices;
+DROP TABLE IF EXISTS staff;
+
 CREATE TABLE staff (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                     name CHAR(255),
                     surname CHAR(255),
@@ -13,9 +16,11 @@ CREATE TABLE devices (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                     state_register_number CHAR(64));
 
 CREATE TABLE works (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-					verificatorId INT UNSIGNED,
-                    managerId INT UNSIGNED,
-                    deviceId INT UNSIGNED,
+					verificator_id INT UNSIGNED,
+                    manager_id INT UNSIGNED,
+                    device_id INT UNSIGNED,
+                    request_number CHAR(64),
+                    account_number CHAR(64),
                     work_index INT UNSIGNED,                      
                     device_etalon_type CHAR(64),
                     temperature DOUBLE, 
@@ -23,6 +28,6 @@ CREATE TABLE works (id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                     preasure DOUBLE,
                     protocolLink CHAR(255),
                     documentLink CHAR(255),
-                    FOREIGN KEY (deviceId) REFERENCES devices (id) ON DELETE CASCADE,
-					FOREIGN KEY (verificatorId) REFERENCES staff (id) ON DELETE SET NULL,
-                    FOREIGN KEY (managerId) REFERENCES staff (id) ON DELETE SET NULL);
+                    FOREIGN KEY (device_id) REFERENCES devices (id) ON DELETE CASCADE,
+					FOREIGN KEY (verificator_id) REFERENCES staff (id) ON DELETE SET NULL,
+                    FOREIGN KEY (manager_id) REFERENCES staff (id) ON DELETE SET NULL);

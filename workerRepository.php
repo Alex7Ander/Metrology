@@ -44,7 +44,7 @@ class workerRepository{
             $surname = $value['surname'];
             $patronimyc = $value['patronimyc'];
             $worker = new Worker($id, $name, $surname, $patronimyc);
-            $workers[] = $worker;
+            $workers["$id"] = $worker;
         }
         return $workers;
     }    

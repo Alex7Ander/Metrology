@@ -55,6 +55,9 @@ class deviceRepository{
         return $devices;
     }
 
+    public function getById($id){
+        return null;
+    }
 
     private function getDevicesFromResult($result){
         $devices = [];
@@ -66,9 +69,11 @@ class deviceRepository{
             $stateRegisterNumber = $value['state_register_number'];
             $device = new Device($deviceGroup, $deviceType, $serialNumber, $stateRegisterNumber);
             $device->setId($id);
-            $devices[] = $device;
+            $devices["$id"] = $device;
         }
         return $devices;
     }
+
+
 }
 ?>

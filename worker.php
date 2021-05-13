@@ -15,7 +15,8 @@ class Worker{
     }
 
     public function __toString(){
-        return "id = " . $this->id . " full name = " . $this->getFullName();
+        $str = $this->getFullName() . " (id=" . $this->getId() . ")";
+        return $str;
     }
 
     public function getId(){

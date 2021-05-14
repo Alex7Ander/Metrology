@@ -19,6 +19,14 @@ class workerRepository{
         $result->close();
         return $workers;
     }
+    
+    public function getWorkerById($id){
+        $query = "SELECT * FROM staff WHERE id = '$id'";
+        $result = $this->mysqli->query($query);
+        $workers = $this->getWorkersFromResult($result);
+        $result->close();
+        return $workers;
+    }
 
     public function getVerificators(){
         $query = "SELECT * FROM staff WHERE verificator_status = TRUE";

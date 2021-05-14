@@ -56,7 +56,11 @@ class deviceRepository{
     }
 
     public function getById($id){
-        return null;
+        $query = "SELECT * FROM devices WHERE id='$id'";
+        $result = $this->mysqli->query($query);
+        $devices = $this->getDevicesFromResult($result);
+        $result->close();
+        return $devices;
     }
 
     private function getDevicesFromResult($result){

@@ -1,13 +1,21 @@
 <?php
+require_once 'device.php';
+require_once 'deviceRepository.php';
+require_once 'worker.php';
+require_once 'workerRepository.php';
 class WorkRepository{
     private $mysqli;
-
+    private $workerRepo;
+    private $deviceRepo;
+    
     public function __construct($host, $user, $password, $database){
         $this->mysqli = new mysqli($host, $user, $password, $database);
         if($this->mysqli->connect_error){
             die("Error: creation object of workRepository class failed (" . $this->mysqli->connect_errno . " - ". $this->mysqli->connect_error . ")");
         }
         $this->mysqli->set_charset('utf8');
+        $this->workerRepo = new WorkerRepository($host, $user, $password, $database);
+        $this->deviceRepo = new Devicerepository($host, $user, $password, $database);
     }
 
     public function save($work){        
@@ -60,7 +68,45 @@ class WorkRepository{
         }
     }
 
-
+    public function getAll(){
+        $query = "SELECT * FROM works";
+        $result = $this->mysqli->query($query);
+        print_r($result);
+        $works = $this->getWorksFromResult($result);
+        print_r($works);
+        $result->close();
+        return $works;
+    }
+    
+    private function getWorksFromResult($result){
+        $works = [];
+        foreach($result as $key=>$value){
+            $deviceId = $value['device_id'];
+            $verificatorId = $value['verificator_id'];
+            $managerId = $value['manager_id'];
+            $device = $this->deviceRepo->getById($deviceId);
+            $verificator = $this->workerRepo->getWorkerById($verificatorId);
+            $manager = $this->workerRepo->getWorkerById($managerId);
+            $requestNumber = $value['request_number'];
+            $accountNumber = $value['account_number'];
+            
+            $work = new Work($deviceId, $requestNumber, $accountNumber);
+            $work->setVerificator($verificator);
+            $work->setManager($manager);
+            $work->setId($value['id']);
+            $work->setVerificator($verificator);
+            $work->setManager($manager);            
+            $work->setWorkIndex($value['work_index']);            
+            $work->setVerificationDate($value['work_index']);            
+            $work->setEtalonType($value['device_etalon_type']);
+            $work->setTemperature($value['temperature']);
+            $work->setHumidity($value['humidity']);
+            $work->setPreasure($value['preasure']);
+            $work->setProtocolLink($value['protocolLink']);
+            $work->setDocumentLink($value['documentLink']);
+        }
+        return $works;
+    }
 
 }
 ?>

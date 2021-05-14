@@ -21,11 +21,14 @@
         </div>
         <div>
             <?php
-                require_once "connection_config.php";
-                $link = mysqli_connect($host, $user, $password, $database) or die("Error: " . mysqli_error($link));
-                $query = "SELECT * FROM works";
-                $result = mysqli_query($link, $query) or die("Error: " . mysqli_error($link));
-                if($result){
+                require_once 'connection_config.php';
+                require_once 'workRepository.php';
+                require_once 'work.php';
+                $workRepo = new WorkRepository($host, $user, $password, $database);
+                //print_r($workRepo);
+                $works = $workRepo->getAll();
+                print_r($works);
+                if($works){
             ?>
                 <table style="width:100%">
                     <tr>
@@ -44,27 +47,10 @@
                         <th>Подробнее</th>
                     </tr>
             <?php
-                foreach($result as $record){
+                foreach($works as $work){
                     echo "<tr>";
-                    $id = $record['id'];
-                    $protLink = $record['protocolLink'];
-                    $docLink = $record['documentLink'];
-                    foreach($record as $key=>$value){
-                        if($key == 'protocolLink') break;
-                        echo "<td>$value</td>";
-                    }
-                    if($protLink != ""){
-                        echo "<td style=\"text-align: center;\"><a href='$protLink'>Протокол</a></td>";
-                    }
-                    else{
-                        echo "<td style=\"text-align: center;\">-</td>";
-                    }
-                    if($docLink != ""){
-                        echo "<td style=\"text-align: center;\"><a href='$docLink'>Документ</a></td>";
-                    }
-                    else{
-                        echo "<td style=\"text-align: center;\">-</td>";
-                    }
+                    echo "<td><p>$work->getId()</p></td>";
+                    echo "<td><p>$work->getVerificator()</p></td>";
                     echo "<td><input type='button' name='$id'></td>";
                     echo "</tr>";
                 }

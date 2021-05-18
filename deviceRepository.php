@@ -60,7 +60,8 @@ class deviceRepository{
         $result = $this->mysqli->query($query);
         $devices = $this->getDevicesFromResult($result);
         $result->close();
-        return $devices;
+        $device = $devices["$id"];
+        return $device;
     }
 
     private function getDevicesFromResult($result){

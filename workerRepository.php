@@ -25,7 +25,8 @@ class workerRepository{
         $result = $this->mysqli->query($query);
         $workers = $this->getWorkersFromResult($result);
         $result->close();
-        return $workers;
+        $worker = $workers["$id"];
+        return $worker;
     }
 
     public function getVerificators(){

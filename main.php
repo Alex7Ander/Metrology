@@ -21,23 +21,21 @@
         </div>
         <div>
             <?php
-                require_once 'connection_config.php';
-                require_once 'workRepository.php';
-                require_once 'work.php';
+                require 'connection_config.php';
+                require 'workRepository.php';
+                require 'work.php';
                 $workRepo = new WorkRepository($host, $user, $password, $database);
-                //print_r($workRepo);
                 $works = $workRepo->getAll();
-                print_r($works);
                 if($works){
             ?>
                 <table style="width:100%">
                     <tr>
-                        <th>id</th>
+                        <th>Номер работы</th>
+                        <th>Номер заявки</th>
+                        <th>Номер счета</th>
                         <th>Поверитель</th>
                         <th>Отв. за закрытие</th>
-                        <th>Номер работы</th>
-                        <th>Тип прибора</th>
-                        <th>зав. №</th>
+                        <th>Прибор</th>
                         <th>Место по повер. схеме</th>                        
                         <th>Температура</th>
                         <th>Влажность</th>
@@ -48,10 +46,44 @@
                     </tr>
             <?php
                 foreach($works as $work){
-                    echo "<tr>";
-                    echo "<td><p>$work->getId()</p></td>";
-                    echo "<td><p>$work->getVerificator()</p></td>";
-                    echo "<td><input type='button' name='$id'></td>";
+                    $currentId = $work->getId();
+                    $currentWorkIndex = $work->getWorkIndex();
+                    $currentRequestNumber = $work->getRequestNumber();
+                    $currentAccountNumber = $work->getAccountNumber();
+                    $currentVerificator = $work->getVerificator();
+                    $currentManager = $work->getManager();
+                    $currentDevice = $work->getDevice();
+                    $currentStandartType = $work->getEtalonType();
+                    $t = $work->getTemperature();
+                    $h = $work->getHumidity();
+                    $p = $work->getPreasure();
+                    $protocolLink = $work->getProtocolLink();
+                    $docLink = $work->getDocumentLink();
+                    
+                    echo "<tr>";  
+                    echo "<td><p>$currentWorkIndex</p></td>";
+                    echo "<td><p>$currentRequestNumber</p></td>";
+                    echo "<td><p>$currentAccountNumber</p></td>";
+                    echo "<td><p>$currentVerificator</p></td>";
+                    echo "<td><p>$currentManager</p></td>";
+                    echo "<td><p>$currentDevice</p></td>";
+                    echo "<td><p>$currentStandartType</p></td>";                    
+                    echo "<td><p>$t</p></td>";
+                    echo "<td><p>$h</p></td>";
+                    echo "<td><p>$p</p></td>";
+                    if($protocolLink){
+                        echo "<td><a href=$protocolLink>Протокол</a></td>";
+                    } 
+                    else {
+                        echo "<td><p>-</p></td>";
+                    }
+                    if($docLink){
+                        echo "<td><a href=$docLink>Документ</a></td>";
+                    }
+                    else{
+                        echo "<td><p>-</p></td>";
+                    }
+                    echo "<td><form method='GET' action='workPage.php'><input type='hidden' name='workId' value='$currentId'><input type='submit' name='$currentId' value='Подробнее'></form></td>";
                     echo "</tr>";
                 }
                 echo"</table>";                

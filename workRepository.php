@@ -67,15 +67,36 @@ class WorkRepository{
             throw $exception;
         }
     }
+    
+    public function modify($work){
+        if(!($work instanceof Work)){
+            die("Error: wrong type of parametr in method save (class workRepository)");
+        }
+        $this->mysqli->begin_transaction();
+        try{
+            echo "Modifying of $work<br>";
+        }
+        catch(mysqli_sql_exception $exception){
+            $this->mysqli->rollback();
+            throw $exception;
+        }
+    }
 
     public function getAll(){
         $query = "SELECT * FROM works";
         $result = $this->mysqli->query($query);
-        print_r($result);
         $works = $this->getWorksFromResult($result);
-        print_r($works);
         $result->close();
         return $works;
+    }
+    
+    public function getById($id){
+        $query = "SELECT * FROM works WHERE id='$id'";
+        $result = $this->mysqli->query($query);
+        $works = $this->getWorksFromResult($result);
+        $result->close();
+        $work = $works["$id"];
+        return $work;
     }
     
     private function getWorksFromResult($result){
@@ -90,10 +111,11 @@ class WorkRepository{
             $requestNumber = $value['request_number'];
             $accountNumber = $value['account_number'];
             
-            $work = new Work($deviceId, $requestNumber, $accountNumber);
+            $work = new Work($device, $requestNumber, $accountNumber);
             $work->setVerificator($verificator);
             $work->setManager($manager);
-            $work->setId($value['id']);
+            $id = $value['id'];
+            $work->setId($id);
             $work->setVerificator($verificator);
             $work->setManager($manager);            
             $work->setWorkIndex($value['work_index']);            
@@ -104,6 +126,8 @@ class WorkRepository{
             $work->setPreasure($value['preasure']);
             $work->setProtocolLink($value['protocolLink']);
             $work->setDocumentLink($value['documentLink']);
+
+            $works["$id"] = $work;
         }
         return $works;
     }

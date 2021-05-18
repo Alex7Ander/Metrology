@@ -23,6 +23,10 @@ class Work{
         $this->requestNumber = $requestNumber;
         $this->accountNumber = $accountNumber;
     }
+    
+    public function __toString(){
+        return $this->id . " счет " . $this->accountNumber . " заявка " . $this->requestNumber . " прибор " .  $this->device; 
+    }
 
     public function getDevice(){
         return $this->device;

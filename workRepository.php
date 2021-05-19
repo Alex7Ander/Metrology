@@ -81,16 +81,74 @@ class WorkRepository{
             throw $exception;
         }
     }
+    
+    public function delete($work){
+        if(!($work instanceof Work)){
+            die("Error: wrong type of parametr in method save (class workRepository)");
+        }
+        $this->mysqli->begin_transaction();
+        try{
+            $id = $work->getId();
+            $query = "DELETE FROM works WHERE id='$id'";
+            $this->mysqli->query($query);
+            $this->mysqli->commit();
+        }
+        catch(mysqli_sql_exception $exception){
+            $this->mysqli->rollback();
+            throw $exception;
+        }
+    }
+    
+    public function getByExample($work){
+        if(!($work instanceof Work)){
+            die("Error: wrong type of parametr in method getByExample (class workRepository)");
+        }
+        $exRequestNumber = $work->getRequestNumber();
+        $exAccountNumber = $work->getAccountNumber();
+        $exWorkIndex = $work->getWorkIndex();
+        $exEtalonType = $work->getEtalonType();
+        $exVerificatorId = '';
+        if($work->getVerificator() != null){
+            $exVerificatorId = $work->getVerificator()->getId();
+        }
+        $exManagerId = '';
+        if($work->getManager() != null){
+            $exManagerId = $work->getManager()->getId();
+        }
+        $exDeviceId = '';
+        if($work->getDevice() != null){
+            $exDeviceId = $work->getDevice()->getId(); 
+        }       
+        $query = "SELECT * FROM works WHERE request_number LIKE '%$exRequestNumber%' 
+                    AND account_number LIKE '%$exAccountNumber%' 
+                    AND work_index LIKE '%$exWorkIndex%' 
+                    AND device_etalon_type LIKE '%$exEtalonType%' 
+                    AND verificator_id LIKE '%$exVerificatorId%' 
+                    AND manager_id LIKE '%$exManagerId%' 
+                    AND device_id LIKE '%$exDeviceId%'";
+        $result = $this->mysqli->query($query);
+        $works = $this->getWorksFromResult($result);
+        $result->close();
+        return $works;
+    }
 
     public function getAll(){
         $query = "SELECT * FROM works";
-        $result = $this->mysqli->query($query);
+        $result = $this->mysqli->query($query);       
         $works = $this->getWorksFromResult($result);
         $result->close();
         return $works;
     }
     
     public function getById($id){
+        $query = "SELECT COUNT(*) AS workCount FROM works WHERE id='$id'";
+        $result = $this->mysqli->query($query);
+        $row = $result->fetch_assoc();
+        $count = $row['workCount'];
+        if($count == 0){
+            $result->close();
+            return null;
+        }
         $query = "SELECT * FROM works WHERE id='$id'";
         $result = $this->mysqli->query($query);
         $works = $this->getWorksFromResult($result);
@@ -101,7 +159,7 @@ class WorkRepository{
     
     private function getWorksFromResult($result){
         $works = [];
-        foreach($result as $key=>$value){
+        foreach($result as $value){
             $deviceId = $value['device_id'];
             $verificatorId = $value['verificator_id'];
             $managerId = $value['manager_id'];
@@ -111,9 +169,12 @@ class WorkRepository{
             $requestNumber = $value['request_number'];
             $accountNumber = $value['account_number'];
             
-            $work = new Work($device, $requestNumber, $accountNumber);
+            $work = new Work();
+            $work->setDevice($device);
             $work->setVerificator($verificator);
             $work->setManager($manager);
+            $work->setAccountNumber($accountNumber);
+            $work->setRequestNumber($requestNumber);
             $id = $value['id'];
             $work->setId($id);
             $work->setVerificator($verificator);

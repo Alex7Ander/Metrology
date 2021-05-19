@@ -21,6 +21,14 @@ class workerRepository{
     }
     
     public function getWorkerById($id){
+        $query = "SELECT COUNT(*) AS workersCount FROM staff WHERE id='$id'";
+        $result = $this->mysqli->query($query);
+        $row = $result->fetch_assoc();
+        $count = $row['workersCount'];
+        if($count == 0){
+            $result->close();
+            return null;
+        }
         $query = "SELECT * FROM staff WHERE id = '$id'";
         $result = $this->mysqli->query($query);
         $workers = $this->getWorkersFromResult($result);

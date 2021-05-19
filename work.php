@@ -18,12 +18,6 @@ class Work{
     private $verificator;
     private $manager;
     
-    public function __construct($device, $requestNumber, $accountNumber){
-        $this->device = $device;
-        $this->requestNumber = $requestNumber;
-        $this->accountNumber = $accountNumber;
-    }
-    
     public function __toString(){
         return $this->id . " счет " . $this->accountNumber . " заявка " . $this->requestNumber . " прибор " .  $this->device; 
     }
@@ -31,8 +25,17 @@ class Work{
     public function getDevice(){
         return $this->device;
     }
+    public function setDevice($device){
+        $this->device = $device;
+    }
     public function getRequestNumber(){
         return $this->requestNumber;
+    }
+    public function setRequestNumber($requestNumber){
+        $this->requestNumber = $requestNumber;
+    }
+    public function setAccountNumber($accountNumber){
+        $this->accountNumber = $accountNumber;
     }
     public function getAccountNumber(){
         return $this->accountNumber;

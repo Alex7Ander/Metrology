@@ -56,6 +56,14 @@ class deviceRepository{
     }
 
     public function getById($id){
+        $query = "SELECT COUNT(*) AS devCount FROM devices WHERE id='$id'";
+        $result = $this->mysqli->query($query);
+        $row = $result->fetch_assoc();
+        $count = $row['devCount'];
+        if($count == 0){
+            $result->close();
+            return null;
+        }
         $query = "SELECT * FROM devices WHERE id='$id'";
         $result = $this->mysqli->query($query);
         $devices = $this->getDevicesFromResult($result);

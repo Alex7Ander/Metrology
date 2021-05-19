@@ -3,7 +3,7 @@
 	<head>
 		<title>Задание на поверку</title>
 		<style>
-           p {
+            p{
             color: indigo;
            }
            .pValue{
@@ -30,34 +30,42 @@
 		      $t = $work->getTemperature();
 		      $h = $work->getHumidity();
 		      $p = $work->getPreasure();
-		      $protocolLink = $work->getProtocolLink();
-		      $docLink = $work->getDocumentLink();
-		      echo "<h1>Задание на поверку № $currentWorkIndex</h1>";
-		      echo "<p>Номер заявки:<i class='pValue'> $currentRequestNumber</i></p>";
-		      echo "<p>Номер счета:<i class='pValue'> $currentAccountNumber</i></p>";
-		      echo "<p>Поверитель:<i class='pValue'> $currentVerificator</i></p>";
-		      echo "<p>Ответственный за закрытие работы:<i class='pValue'> $currentManager</i></p>";
-		      echo "<p>Прибор:<i class='pValue'> $currentDevice</i></p>";
-		      echo "<p>Место по поверочной схеме:<i class='pValue'> $currentStandartType</i></p>";
-		      echo "<form method='POST' enctype='multipart/form-data' action='modifyWork.php'><table>
-                        <tr>
-                            <th>Температура</th>
-                            <th>Давление</th>
-                            <th>Влажность</th>
-                        </tr>
-                        <tr>
-                            <td><input type='text' name='t' value='$t'></td>
-                            <td><input type='text' name='p' value='$p'></td>
-                            <td><input type='text' name='h' value='$h'></td>
-                        </tr>
-                    </table>";
-		      echo "<input name='id' type='hidden' value='$workId'/><br>";
-		      echo "<input name='protocol' type='file'/><br>";
-		      echo "<input name='document' type='file'/><br>";
-		      echo "<input type='submit' value='Сохранить'></form><br>";
-		  }
-		  else{
-		      echo "Работа с данным id не найдена";
+		?>
+		<div>
+            <h1>Задание на поверку №<?=$currentWorkIndex?></h1>
+            <p>Номер заявки:<i class='pValue'><?=$currentRequestNumber?></i></p>
+            <p>Номер счета:<i class='pValue'><?=$currentAccountNumber?></i></p>
+		    <p>Поверитель:<i class='pValue'><?=$currentVerificator?></i></p>
+            <p>Ответственный за закрытие работы:<i class='pValue'><?=$currentManager?></i></p>
+            <p>Прибор:<i class='pValue'><?=$currentDevice?></i></p>
+            <p>Место по поверочной схеме:<i class='pValue'><?=$currentStandartType?></i></p>
+            <form method='POST' enctype='multipart/form-data' action='modifyWork.php'><table>
+                    <tr>
+                        <th>Температура</th>
+                        <th>Давление</th>
+                        <th>Влажность</th>
+                    </tr>
+                    <tr>
+                        <td><input type='text' name='t' value='<?=$t?>'></td>
+                        <td><input type='text' name='p' value='<?=$p?>'></td>
+                        <td><input type='text' name='h' value='<?=$h?>'></td>
+                    </tr>
+                </table>
+            <input name='id' type='hidden' value='<?=$workId?>'/><br>
+            <input name='protocol' type='file'/><br>
+            <input name='document' type='file'/><br>
+            <input type='submit' value='Сохранить'></form><br>
+		</div>
+		<div>
+			<form action='deleteWork.php' method='POST'>
+				<input type='hidden' name='id' value=<?=$workId?>>
+				<input type='submit' value='Удалить работу' name='delete'>
+			</form>
+		</div>
+		<?php
+		  }else{
+		      echo "<p>Работа с данным id = $workId не найдена</p>";
+		      echo "<a href='main.php'>На главную</a>";
 		  }
 		?>
 	</body>

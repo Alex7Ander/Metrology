@@ -12,7 +12,7 @@
             <a href="/metrology/main.php">На главную</a>
         </div>
         <div>
-            <form action="add.php" method="POST">
+            <form action="addWork.php" method="POST">
                 <?php
                     require_once "connection_config.php";
                     require_once "workerRepository.php";
@@ -42,7 +42,10 @@
                         $humidity = $_REQUEST['humidity'];
                         $preasure = $_REQUEST['preasure'];
 
-                        $work = new Work($device, $requestNumber, $accountNumber);
+                        $work = new Work();
+                        $work->setDevice($device);
+                        $work->setRequestNumber($requestNumber);
+                        $work->setAccountNumber($accountNumber);
                         $work->setVerificator($verificator);
                         $work->setManager($manager);
                         $work->setVerificationDate($verificationDate);

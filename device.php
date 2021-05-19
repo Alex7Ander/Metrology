@@ -15,7 +15,7 @@ class Device{
     }
 
     public function __toString(){
-        return $this->deviceGroup . " " . $this->deviceType . " №" . $this->serialNumber . " (номер в гос реестре " . $this->stateRegisterNumber . ")";
+        return $this->deviceGroup . " " . $this->deviceType . " №" . $this->serialNumber;
     }
 
     public function setId($id){

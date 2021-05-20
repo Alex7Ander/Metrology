@@ -4,11 +4,29 @@
         <title>Распределение метрологических работ - Главная</title>
         <meta charset="utf-8">
         <style>
+
             table, td, th{
                 border: 1px solid black;
             }
             .noBorder{
                 border: none;
+            }
+            .linksblock{
+                float:left;
+                background: #ccc;
+                width: 29%;
+                margin: 1%;
+                padding: 1%;
+            }
+            .links:after{
+                content:"";
+                display: block;
+                clear: both;
+            }
+            .content{
+                padding: 100 px;                
+                clear: left;
+                margin-top: 100 px;
             }
         </style>
     </head>
@@ -16,23 +34,23 @@
         <div>
             <h1>Распределение метрологических работ - Главная</h1>
         </div>
-        <div>
-        	<div>
+        <div class="links">
+        	<div class="linksblock">
         		<h3>Приборы: </h3>
         		<a href="/metrology/devicesList.php">Приборы (для поверки)</a>
         		<a href="/metrology/addDevice.php">Добавить прибор (для поверки)</a>
         	</div>
-        	<div>
+        	<div class="linksblock">
         		<h3>Сотрудники: </h3>
         		<a href="/metrology/workersList.php">Список работников</a>
         		<a href="/metrology/addWorker.php">Добавить сотрудника</a>
         	</div>
-        	<div>
+        	<div class="linksblock">
         		<h3>Задания: </h3>
             	<a href="/metrology/addWork.php">Добавить работу</a>
             </div>
         </div>
-        <div>
+        <div class="content">
             <?php
                 require 'connection_config.php';
                 require 'workRepository.php';

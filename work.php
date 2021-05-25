@@ -18,6 +18,14 @@ class Work{
     private $verificator;
     private $manager;
     
+    private $taken;
+    private $measured;
+    private $processed;
+    private $metrologyClosed;
+    private $documentNumber;
+    private $documentPrinted;
+    private $givenAway;
+    
     public function __toString(){
         return $this->id . " счет " . $this->accountNumber . " заявка " . $this->requestNumber . " прибор " .  $this->device; 
     }
@@ -117,6 +125,48 @@ class Work{
     public function setDocumentLink($documentLink){
         $this->documentLink = $documentLink;
     }
-
+    
+    public function isTake(){
+        return $this->taken;
+    }
+    public function setTaken($taken){
+        $this->taken = $taken;
+    }
+    
+    public function isMeasured(){
+        return $this->measured;
+    }
+    public function setMeasured($measured){
+        $this->measured = $measured;
+    }
+    
+    public function isProcessed(){
+        return $this->processed;
+    }
+    public function setProcessed($processed){
+        $this->processed = $processed;
+    }
+    
+    public function isMetrologyClosed(){
+        return $this->metrologyClosed;
+    }
+    public function setMetrologyClosed($metrologyClosed){
+        $this->metrologyClosed = $metrologyClosed;
+    }
+        
+    public function isDocumentPrinted(){
+        return $this->documentPrinted;
+    }
+    public function setDocumentPrinted($documentPrinted){
+        $this->documentPrinted = $documentPrinted;
+    }
+    
+    public function isGivenAway(){
+        return $this->givenAway;
+    }
+    public function setGivenAway($givenAway){
+        $this->givenAway = $givenAway;
+    }
+    
 }
 ?>

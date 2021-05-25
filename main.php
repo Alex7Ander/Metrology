@@ -3,10 +3,10 @@
     <head>
         <title>Распределение метрологических работ - Главная</title>
         <meta charset="utf-8">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">       
         <style>
-
             table, td, th{
-                border: 1px solid black;
+                border: 1px solid black;               
             }
             .noBorder{
                 border: none;
@@ -28,29 +28,36 @@
                 clear: left;
                 margin-top: 100 px;
             }
+            .digitalField{
+                width: 100px;
+            }
         </style>
     </head>
     <body>
-        <div>
-            <h1>Распределение метрологических работ - Главная</h1>
-        </div>
-        <div class="links">
-        	<div class="linksblock">
-        		<h3>Приборы: </h3>
-        		<a href="/metrology/devicesList.php">Приборы (для поверки)</a>
-        		<a href="/metrology/addDevice.php">Добавить прибор (для поверки)</a>
-        	</div>
-        	<div class="linksblock">
-        		<h3>Сотрудники: </h3>
-        		<a href="/metrology/workersList.php">Список работников</a>
-        		<a href="/metrology/addWorker.php">Добавить сотрудника</a>
-        	</div>
-        	<div class="linksblock">
-        		<h3>Задания: </h3>
-            	<a href="/metrology/addWork.php">Добавить работу</a>
+    	<div class = "container-fluid">
+			<div class="row">
+    	        <div>
+                    <h1>Распределение метрологических работ - Главная</h1>
+                </div>
             </div>
-        </div>
-        <div class="content">
+            <div class="row">
+            	<div class="col-md3 linksblock">
+            		<h3>Приборы: </h3>
+            		<a href="/metrology/devicesList.php">Приборы (для поверки)</a><br>
+            		<a href="/metrology/addDevice.php">Добавить прибор (для поверки)</a><br>
+            	</div>
+            	<div class="col-md3 linksblock">
+            		<h3>Сотрудники: </h3>
+            		<a href="/metrology/workersList.php">Список работников</a>
+            		<a href="/metrology/addWorker.php">Добавить сотрудника</a>
+            	</div>
+            	<div class="col-md3 linksblock">
+            		<h3>Задания: </h3>
+                	<a href="/metrology/addWork.php">Добавить работу</a>
+                </div>
+                <div class="col-md3">
+                </div>
+			</div>
             <?php
                 require 'connection_config.php';
                 require 'workRepository.php';
@@ -80,100 +87,95 @@
                 else{
                     $works = $workRepo->getAll();
                 }
-                
-                if($works){
             ?>
-                <table style="width:100%">
-                    <tr>
-                    	<th>Дата поверки</th>
-                        <th>Номер работы</th>
-                        <th>Номер заявки</th>
-                        <th>Номер счета</th>
-                        <th>Поверитель</th>
-                        <th>Отв. за закрытие</th>
-                        <th>Прибор</th>
-                        <th>Место по повер. схеме</th>                        
-                        <th>Параметры среды</th>
-                        <th>Подробнее</th>
-                    </tr>
-                    <tr>
-                    	<th colspan='10'>Фильтры</th>
-                    </tr>
-					<tr>
-						<form method='GET' action='main.php' name='filters'>
-						<td><input type = 'date' name='date' class='noBorder'></td>
-                        <td><input type = 'text' name='workIndex' class='noBorder'></td>
-                        <td><input type = 'text' name='requestNumber' class='noBorder'></td>
-                        <td><input type = 'text' name='accountNumber' class='noBorder'></td>
-                        <td><select name="verificatorId" class='noBorder'>
-                        <?php 
-                            echo "<option value=''></option>";
-                            foreach ($verificators as $verificator){
-                                $currentVerificatorId = $verificator->getId();
-                                echo "<option value='$currentVerificatorId'>$verificator</option>";
-                            }
-                        ?></select></td>
-                        <td><select name="managerId" class='noBorder'>
-                        <?php 
-                            echo "<option value=''></option>";
-                            foreach ($managers as $manager){
-                                $currentManagerId = $manager->getId();
-                                echo "<option value='$currentManagerId'>$manager</option>";
-                            }
-                        ?></select></td>
-                        <td><select name="deviceId" class='noBorder'>
-                        <?php 
-                            echo "<option value=''></option>";
-                            foreach ($devices as $device){
-                                $currentDeviceId = $device->getId();
-                                echo "<option value='$currentDeviceId'>$device</option>";
-                            }
-                        ?></select></td>
-                        <td><select name="etalonType" class='noBorder'>
-                        	<option></option>
-                        	<option>Рабочее средство измерения</option>
-                        	<option>Эталон 2-го рязряда</option>
-                        	<option>Эталон 1-го разряда</option>
-                        	<option>Вторичный эталон</option>
-                    	</select></td>                        
-                        <td>-</td>
-                        <td><input type='submit' name='search' value='Искать'></td>
-                        </form>
-                    </tr>                  
-                    <tr>
-                    	<th colspan='10'>Список работ</th>
-                    </tr>
-                    
-            <?php
-                foreach($works as $work){
-                    $currentId = $work->getId();
-                    $currentWorkIndex = $work->getWorkIndex();
-                    $currentRequestNumber = $work->getRequestNumber();
-                    $currentAccountNumber = $work->getAccountNumber();
-                    $currentVerificator = $work->getVerificator();
-                    $currentManager = $work->getManager();
-                    $currentDevice = $work->getDevice();
-                    $currentStandartType = $work->getEtalonType();
-                    $t = $work->getTemperature();
-                    $h = $work->getHumidity();
-                    $p = $work->getPreasure();
-                    
-                    echo "<tr>";  
-                    echo "<td><p>-</p></td>";
-                    echo "<td><p>$currentWorkIndex</p></td>";
-                    echo "<td><p>$currentRequestNumber</p></td>";
-                    echo "<td><p>$currentAccountNumber</p></td>";
-                    echo "<td><p>$currentVerificator</p></td>";
-                    echo "<td><p>$currentManager</p></td>";
-                    echo "<td><p>$currentDevice</p></td>";
-                    echo "<td><p>$currentStandartType</p></td>";                    
-                    echo "<td>t = $t С;<br>p = $p мм рт ст;<br>h = $h %</td>";
-                    echo "<td><form method='GET' action='workPage.php'><input type='hidden' name='workId' value='$currentId'><input type='submit' name='$currentId' value='Подробнее'></form></td>";
-                    echo "</tr>";
-                }
-                echo"</table>";                
-                }
-            ?>
+            <div class="row">
+            	<div class="col-md-auto">
+                	<table>
+                        <tr>
+                        	<th>Дата поверки</th>
+                            <th>Номер работы</th>
+                            <th>Номер заявки / счета</th>
+                            <th>Поверитель</th>
+                            <th>Отв. за закрытие</th>
+                            <th>Прибор</th>
+                            <th>Место по повер. схеме</th>                        
+                            <th>Подробнее</th>
+                        </tr>
+                        <tr>
+                        	<th colspan='8'>Фильтры</th>
+                        </tr>
+    					<tr>
+    						<form method='GET' action='main.php' name='filters'>
+    						<td><input type = 'date' name='date' class='noBorder'></td>
+                            <td><input type = 'text' name='workIndex' class='digitalField'></td>
+                            <td>
+                            	<input type = 'text' name='requestNumber' class='digitalField'> / 
+                            	<input type = 'text' name='accountNumber' class='digitalField'>
+                            </td>
+                            <td><select name="verificatorId" class='noBorder'>
+                            <?php 
+                                echo "<option value=''></option>";
+                                foreach ($verificators as $verificator){
+                                    $currentVerificatorId = $verificator->getId();
+                                    echo "<option value='$currentVerificatorId'>$verificator</option>";
+                                }
+                            ?></select></td>
+                            <td><select name="managerId" class='noBorder'>
+                            <?php 
+                                echo "<option value=''></option>";
+                                foreach ($managers as $manager){
+                                    $currentManagerId = $manager->getId();
+                                    echo "<option value='$currentManagerId'>$manager</option>";
+                                }
+                            ?></select></td>
+                            <td><select name="deviceId" class='noBorder'>
+                            <?php 
+                                echo "<option value=''></option>";
+                                foreach ($devices as $device){
+                                    $currentDeviceId = $device->getId();
+                                    echo "<option value='$currentDeviceId'>$device</option>";
+                                }
+                            ?></select></td>
+                            <td><select name="etalonType" class='noBorder'>
+                            	<option></option>
+                            	<option>Рабочее средство измерения</option>
+                            	<option>Эталон 2-го рязряда</option>
+                            	<option>Эталон 1-го разряда</option>
+                            	<option>Вторичный эталон</option>
+                        	</select></td>                        
+                            <td><input type='submit' name='search' value='Искать'></td>
+                            </form>
+                        </tr>                  
+                        <tr>
+                        	<th colspan='8'>Список работ</th>
+                        </tr>                                            
+                    	<?php
+                        if($works){
+                            foreach($works as $work){
+                                $currentId = $work->getId();
+                                $currentWorkIndex = $work->getWorkIndex();
+                                $currentRequestNumber = $work->getRequestNumber();
+                                $currentAccountNumber = $work->getAccountNumber();
+                                $currentVerificator = $work->getVerificator();
+                                $currentManager = $work->getManager();
+                                $currentDevice = $work->getDevice();
+                                $currentStandartType = $work->getEtalonType();                                
+                                echo "<tr>";  
+                                echo "<td><p>-</p></td>";
+                                echo "<td><p>$currentWorkIndex</p></td>";
+                                echo "<td>$currentRequestNumber / $currentAccountNumber</td>";
+                                echo "<td><p>$currentVerificator</p></td>";
+                                echo "<td><p>$currentManager</p></td>";
+                                echo "<td><p>$currentDevice</p></td>";
+                                echo "<td><p>$currentStandartType</p></td>";                    
+                                echo "<td><form method='GET' action='workPage.php'><input type='hidden' name='workId' value='$currentId'><input type='submit' name='$currentId' value='Подробнее'></form></td>";
+                                echo "</tr>";
+                            }               
+                        }
+                        ?>
+                	</table>
+                </div>
+        	</div>
         </div>
     </body>
 </html>

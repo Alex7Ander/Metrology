@@ -25,7 +25,7 @@
 		  $workId = $_REQUEST["workId"];
 		  $workRepo = new WorkRepository($host, $user, $password, $database);
 		  $work = $workRepo->getById($workId);
-		  if($work){
+		  if($work){	      
 		      $currentWorkIndex = $work->getWorkIndex();
 		      $currentRequestNumber = $work->getRequestNumber();
 		      $currentAccountNumber = $work->getAccountNumber();
@@ -67,13 +67,13 @@
             		<form method='POST' action='' enctype='multipart/form-data'>
             		    <!-- Taken -->
             		    <div class=bordered>
-            			<input type='hidden' name='processMods[taken]' value='0'>
-                		<label><input type='checkbox' name='processMods[taken]' value='1'>Прибор принят в работу</label><br>
+            			<input type='hidden' name='processMods[taken]' value='FALSE'>
+                		<label><input type='checkbox' name='processMods[taken]' value='TRUE' <?php if($work->isTaken()) echo "checked";?>>Прибор принят в работу</label><br>
                 		</div>
                 		<!-- Measured -->
                 		<div class=bordered>
-                		<input type='hidden' name='processMods[measured]' value='0'>
-                		<label><input type='checkbox' name='processMods[measured]' value='1' checked>Измерения проведены при следующих характеристиках окружающей среды</label><br>
+                		<input type='hidden' name='processMods[measured]' value='FALSE'>
+                		<label><input type='checkbox' name='processMods[measured]' value='TRUE' <?php if($work->isMeasured()) echo"checked";?>>Измерения проведены при следующих характеристиках окружающей среды</label><br>
                 		<table> 
                 			<tr>
                                 <th>Температура</th>
@@ -89,30 +89,31 @@
                     	</div>
                     	<!-- Protocol -->
                     	<div class=bordered>
-                    	<input type='hidden' name='processMods[processed]' value='0'>
-                		<label><input type='checkbox' id='protocolCheckbox' name='processMods[processed]' value='1'>Протокол поверки создан</label><br>                		
+                    	<input type='hidden' name='processMods[processed]' value='FALSE'>
+                		<label><input type='checkbox' id='protocolCheckbox' name='processMods[processed]' value='TRUE' <?php if($work->isProcessed()) echo"checked";?>>Протокол поверки создан</label><br>                		
                 		<input name='protocol' id='protocolInput' type='file'/><br>
                 		</div>
                 		<!-- Metrology closing -->
                 		<div class=bordered>
-                		<input type='hidden' name='processMods[metrologyClosed]' value='0'>
-                		<label><input type='checkbox' name='processMods[metrologyClosed]' value='1'>Работа закрыта в метрологии</label><br>
+                		<input type='hidden' name='processMods[metrologyClosed]' value='FALSE'>
+                		<label><input type='checkbox' name='processMods[metrologyClosed]' value='TRUE' <?php if($work->isMetrologyClosed()) echo"checked";?>>Работа закрыта в метрологии</label><br>
                 		</div>
                 		<!-- Doc number -->
                 		<div class=bordered>
-                		<label><input type='checkbox' name='numberTaken' id='numberTaken' value='1'>Получен номер из системы Аршин</label>
-                		<input type='text' name='documentNumber'><br>
+                		<input type='hidden' name='processMods[numberTaken]' value='FALSE'>
+                		<label><input type='checkbox' name='processMods[numberTaken]' id='numberTaken' value='TRUE' <?php if($work->getDocumentNumber()) echo"checked";?>>Получен номер из системы Аршин</label>
+                		<input type='text' name='documentNumber' <?php if($work->getDocumentNumber()) echo "value = {$work->getDocumentNumber()}";?>><br>
                 		</div>
                 		<!-- Doc printed -->
                 		<div class=bordered>
-                		<input type='hidden' name='processMods[documentPrinted]' value='0'>
-                		<label><input type='checkbox' id='docCheckbox' name='processMods[documentPrinted]' value='1'>Свидетельство / извещение выписано</label><br>                		
+                		<input type='hidden' name='processMods[documentPrinted]' value='FALSE'>
+                		<label><input type='checkbox' id='docCheckbox' name='processMods[documentPrinted]' value='TRUE' <?php if($work->isDocumentPrinted()) echo"checked";?>>Свидетельство / извещение выписано</label><br>                		
                 		<input name='document' id='docInput'  type='file'/><br>
                 		</div>
                 		<!-- Given away -->
                 		<div class=bordered>
-                		<input type='hidden' name='processMods[givenAway]' value='0'>
-                		<label><input type='checkbox' name='processMods[givenAway]' value='1'>Прибор отдан</label><br>
+                		<input type='hidden' name='processMods[givenAway]' value='FALSE'>
+                		<label><input type='checkbox' name='processMods[givenAway]' value='TRUE' <?php if($work->isGivenAway()) echo"checked";?>>Прибор отдан</label><br>
                 		</div>
                 		<input type='submit' value='Сохранить изменения' name='processModified' style={width: 100%;}>
             		</form>
@@ -124,8 +125,7 @@
 		      echo "<p>Работа с данным id = $workId не найдена</p>";
 		      echo "<a href='main.php'>На главную</a>";
 		  }
-		  
-		  if(isset($_REQUEST['processModified'])){		      
+		  if(isset($_REQUEST['processModified'])){
 		      if(isset($_REQUEST['processMods'])){
 		          $mods = $_REQUEST['processMods'];
 		          $work->setTaken($mods['taken']);
@@ -137,12 +137,11 @@
 		      }
 		      if(isset($_REQUEST['inv'])){
 		          $inv = $_REQUEST['inv'];
-		          var_dump($inv);
 		          $work->setTemperature($inv['t']);
 		          $work->setPreasure($inv['p']);
 		          $work->setHumidity($inv['h']);
-		          $workRepo->modify($work);
 		      }
+		      $workRepo->modify($work);
 		      //files uploading
 		      $uploadPath = "/home/alex/uploads/";
 		      echo "uploadPath = $uploadPath ";

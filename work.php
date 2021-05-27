@@ -126,7 +126,14 @@ class Work{
         $this->documentLink = $documentLink;
     }
     
-    public function isTake(){
+    public function getDocumentNumber(){
+        return $this->documentNumber;
+    }
+    public function setDocumetnNumber($number){
+        $this->documentNumber = $number;
+    }
+    
+    public function isTaken(){
         return $this->taken;
     }
     public function setTaken($taken){

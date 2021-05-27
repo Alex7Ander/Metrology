@@ -74,7 +74,29 @@ class WorkRepository{
         }
         $this->mysqli->begin_transaction();
         try{
-            echo "Modifying of $work<br>";
+            $query = "UPDATE works SET verificator_id='{$work->getVerificator()->getId()}', 
+                manager_id = '{$work->getManager()->getId()}',
+                device_id = '{$work->getDevice()->getId()}',
+                request_number = '{$work->getRequestNumber()}',
+                account_number = '{$work->getAccountNumber()}',
+                work_index = '{$work->getWorkIndex()}',
+                device_etalon_type = '{$work->getEtalonType()}',
+                temperature = '{$work->getTemperature()}',
+                humidity = '{$work->getHumidity()}',
+                preasure = '{$work->getPreasure()}',
+                protocolLink = '{$work->getProtocolLink()}',
+                documentLink = '{$work->getDocumentLink()}',
+                taken = {$work->isTaken()},
+                measured = {$work->isMeasured()},
+                processed = {$work->isProcessed()},
+                metrology_closed = {$work->isMetrologyClosed()},
+                document_printed = {$work->isDocumentPrinted()},
+                given_away = {$work->isGivenAway()},
+                document_number = '{$work->getDocumentNumber()}'
+                WHERE id='{$work->getId()}'";
+            echo "<br>$query<br>";
+            $this->mysqli->query($query);
+            $this->mysqli->commit();
         }
         catch(mysqli_sql_exception $exception){
             $this->mysqli->rollback();
@@ -187,7 +209,13 @@ class WorkRepository{
             $work->setPreasure($value['preasure']);
             $work->setProtocolLink($value['protocolLink']);
             $work->setDocumentLink($value['documentLink']);
-
+            $work->setTaken($value['taken']);
+            $work->setMeasured($value['measured']);
+            $work->setProcessed($value['processed']);
+            $work->setMetrologyClosed($value['metrology_closed']);
+            $work->setDocumetnNumber($value['document_number']);
+            $work->setDocumentPrinted($value['document_printed']);
+            $work->setGivenAway($value['given_away']);
             $works["$id"] = $work;
         }
         return $works;

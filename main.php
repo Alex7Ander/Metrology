@@ -44,6 +44,7 @@
             	<div class="col-md3 linksblock">
             		<h3>Приборы: </h3>
             		<a href="/metrology/devicesList.php">Приборы (для поверки)</a><br>
+            		<a href="/metrology/addDeviceType.php">Добавить тип прибора</a><br>
             		<a href="/metrology/addDevice.php">Добавить прибор (для поверки)</a><br>
             	</div>
             	<div class="col-md3 linksblock">
@@ -59,15 +60,17 @@
                 </div>
 			</div>
             <?php
-                require 'connection_config.php';
-                require 'workRepository.php';
-                require 'work.php';
+                require_once 'connection_config.php';
+                require_once 'StaffRepository.php';
+                require_once 'WorkRepository.php';
+                require_once 'Work.php';
+                
                 $workRepo = new WorkRepository($host, $user, $password, $database);
-                $workerRepo = new WorkerRepository($host, $user, $password, $database);
+                $staffRepo = new StaffRepository($host, $user, $password, $database);
                 $deviceRepo = new Devicerepository($host, $user, $password, $database);
                                 
-                $verificators = $workerRepo->getVerificators();
-                $managers = $workerRepo->getManagers();
+                $verificators = $staffRepo->getVerificators();
+                $managers = $staffRepo->getManagers();
                 $devices = $deviceRepo->getAll();
                 
                 if(isset($_REQUEST['search'])){ 
@@ -78,9 +81,9 @@
                     $exampleWork->setEtalonType($_REQUEST['etalonType']);
                     $exDevice = $deviceRepo->getById($_REQUEST['deviceId']);
                     $exampleWork->setDevice($exDevice);
-                    $exManager = $workerRepo->getWorkerById($_REQUEST['managerId']);
+                    $exManager = $staffRepo->getWorkerById($_REQUEST['managerId']);
                     $exampleWork->setManager($exManager);
-                    $exVarificator = $workerRepo->getWorkerById($_REQUEST['verificatorId']);
+                    $exVarificator = $staffRepo->getWorkerById($_REQUEST['verificatorId']);
                     $exampleWork->setVerificator($exVarificator);
                     $works = $workRepo->getByExample($exampleWork);
                 }

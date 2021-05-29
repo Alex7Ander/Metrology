@@ -1,5 +1,5 @@
 <?php
-class Worker{
+class Staff{
     private $id;
     private $name;
     private $surname;

@@ -11,10 +11,10 @@
         <div>
         <?php
             require_once "connection_config.php";
-            require_once "device.php";
-            require_once "deviceRepository.php";
+            require_once "Device.php";
+            require_once "DeviceRepository.php";
 
-            $deviceRepo = new deviceRepository($host, $user, $password, $database);
+            $deviceRepo = new DeviceRepository($host, $user, $password, $database);
             $devices = $deviceRepo->getAll();
             foreach($devices as $key=>$device){
                 echo "$key - $device<br>";

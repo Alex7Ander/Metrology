@@ -1,6 +1,6 @@
 <?php
-require_once "device.php";
-class deviceRepository{
+require_once "Device.php";
+class DeviceRepository{
 
     private $mysqli;
 

@@ -22,9 +22,9 @@
                 <input type="submit" name="save" value="Отправить данные">
             </form>
             <?php
-            require "device.php";
-            require "deviceRepository.php";
-            require "connection_config.php";
+            require_once "Device.php";
+            require_once "DeviceRepository.php";
+            require_once "connection_config.php";
                 if(isset($_REQUEST['save'])){
                     $deviceGroup = $_POST['device_group'];
                     $deviceType = $_POST['device_type'];

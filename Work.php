@@ -129,7 +129,7 @@ class Work{
     public function getDocumentNumber(){
         return $this->documentNumber;
     }
-    public function setDocumetnNumber($number){
+    public function setDocumentNumber($number){
         $this->documentNumber = $number;
     }
     

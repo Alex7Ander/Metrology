@@ -20,12 +20,51 @@
 	<body>
 		<?php
 		  require_once 'connection_config.php';
-		  require_once 'work.php';
-		  require_once 'workRepository.php';
+		  require_once 'Work.php';
+		  require_once 'WorkRepository.php';
+		  
+		  function removeUploadedFile($index, $to){
+		      $uploadedFileRealName = $_FILES[$index]['name'];
+		      $uploadedFileRealName = uniqid(rand()) . "_" . str_replace(" ", "_", $uploadedFileRealName);
+		      if (move_uploaded_file($_FILES[$index]['tmp_name'], $to . $uploadedFileRealName)) {
+		          return $to . $uploadedFileRealName;
+		      }
+		      return null;
+		  }
+		  
 		  $workId = $_REQUEST["workId"];
 		  $workRepo = new WorkRepository($host, $user, $password, $database);
 		  $work = $workRepo->getById($workId);
-		  if($work){	      
+		  if($work){	
+		      if(isset($_REQUEST['processModified'])){
+		          $mods = $_REQUEST['processMods'];
+		          $work->setTaken($mods['taken']);
+		          $work->setMeasured($mods['measured']);
+		          $work->setEtalonType($_REQUEST['device_etalon_type']);
+		          $work->setProcessed($mods['processed']);		          
+		          $work->setMetrologyClosed($mods['metrologyClosed']);		          
+		          $work->setDocumentNumber($_REQUEST['documentNumber']);
+		          $work->setDocumentPrinted($mods['documentPrinted']);
+		          $work->setGivenAway($mods['givenAway']);		          
+		          $inv = $_REQUEST['inv'];
+		          $work->setTemperature($inv['t']);
+		          $work->setPreasure($inv['p']);
+		          $work->setHumidity($inv['h']);
+		          		          
+		          //files uploading		         
+		          //if protocol uploaded		          		          
+		          if(isset($_FILES['protocol'])){
+		              $uploadedLink = removeUploadedFile('protocol', $recordUploadPath); //variable $recordUploadPath is getting from file conection_config.php
+		              $work->setProtocolLink($uploadedLink);
+		          }
+		          //if document uploaded
+		          if(isset($_FILES['document'])){
+		              $uploadedLink = removeUploadedFile('document', $recordUploadPath);
+		              $work->setDocumentLink($uploadedLink);
+		          }
+		          $workRepo->modify($work);
+		      }
+
 		      $currentWorkIndex = $work->getWorkIndex();
 		      $currentRequestNumber = $work->getRequestNumber();
 		      $currentAccountNumber = $work->getAccountNumber();
@@ -67,53 +106,62 @@
             		<form method='POST' action='' enctype='multipart/form-data'>
             		    <!-- Taken -->
             		    <div class=bordered>
-            			<input type='hidden' name='processMods[taken]' value='FALSE'>
-                		<label><input type='checkbox' name='processMods[taken]' value='TRUE' <?php if($work->isTaken()) echo "checked";?>>Прибор принят в работу</label><br>
+            				<input type='hidden' name='processMods[taken]' value='0'>
+                			<label><input type='checkbox' name='processMods[taken]' value='1' <?php if($work->isTaken()) echo "checked";?>>Прибор принят в работу</label><br>
                 		</div>
                 		<!-- Measured -->
                 		<div class=bordered>
-                		<input type='hidden' name='processMods[measured]' value='FALSE'>
-                		<label><input type='checkbox' name='processMods[measured]' value='TRUE' <?php if($work->isMeasured()) echo"checked";?>>Измерения проведены при следующих характеристиках окружающей среды</label><br>
-                		<table> 
-                			<tr>
-                                <th>Температура</th>
-                                <th>Давление</th>
-                                <th>Влажность</th>
-                            </tr>
-                            <tr>
-                                <td><input type='text' name='inv[t]' value='<?=$t?>'></td>
-                                <td><input type='text' name='inv[p]' value='<?=$p?>'></td>
-                                <td><input type='text' name='inv[h]' value='<?=$h?>'></td>
-                            </tr>
-                    	</table>
+                    		<input type='hidden' name='processMods[measured]' value='0'>
+                    		<label><input type='checkbox' name='processMods[measured]' value='1' <?php if($work->isMeasured()) echo"checked";?>>Измерения проведены при следующих характеристиках окружающей среды</label><br>
+                    		<table> 
+                    			<tr>
+                                    <th>Температура</th>
+                                    <th>Давление</th>
+                                    <th>Влажность</th>
+                                </tr>
+                                <tr>
+                                    <td><input type='text' name='inv[t]' value='<?=$t?>'></td>
+                                    <td><input type='text' name='inv[p]' value='<?=$p?>'></td>
+                                    <td><input type='text' name='inv[h]' value='<?=$h?>'></td>
+                                </tr>
+                        	</table>
+                        	<p>И на основании результатов поверки определено место по поверочной схеме как:</p>
+                            <select name="device_etalon_type">
+                                <option>Рабочее средство измерения</option>
+                                <option>Эталон 2-го рязряда</option>
+                                <option>Эталон 1-го разряда</option>
+                                <option>Вторичный эталон</option>
+                        	</select>
                     	</div>
                     	<!-- Protocol -->
                     	<div class=bordered>
-                    	<input type='hidden' name='processMods[processed]' value='FALSE'>
-                		<label><input type='checkbox' id='protocolCheckbox' name='processMods[processed]' value='TRUE' <?php if($work->isProcessed()) echo"checked";?>>Протокол поверки создан</label><br>                		
-                		<input name='protocol' id='protocolInput' type='file'/><br>
+                    		<input type='hidden' name='processMods[processed]' value='0'>
+                			<label><input type='checkbox' id='protocolCheckbox' name='processMods[processed]' value='1' <?php if($work->isProcessed()) echo"checked";?>>Протокол поверки создан</label><br>                		
+                			<?php if($work->getProtocolLink()){echo "<a href={$work->getProtocolLink()} download=''>Протокол</a>";}?>
+                			<input name='protocol' id='protocolInput' type='file'/><br>
                 		</div>
                 		<!-- Metrology closing -->
                 		<div class=bordered>
-                		<input type='hidden' name='processMods[metrologyClosed]' value='FALSE'>
-                		<label><input type='checkbox' name='processMods[metrologyClosed]' value='TRUE' <?php if($work->isMetrologyClosed()) echo"checked";?>>Работа закрыта в метрологии</label><br>
+                			<input type='hidden' name='processMods[metrologyClosed]' value='0'>
+                			<label><input type='checkbox' name='processMods[metrologyClosed]' value='1' <?php if($work->isMetrologyClosed()) echo"checked";?>>Работа закрыта в метрологии</label><br>
                 		</div>
                 		<!-- Doc number -->
                 		<div class=bordered>
-                		<input type='hidden' name='processMods[numberTaken]' value='FALSE'>
-                		<label><input type='checkbox' name='processMods[numberTaken]' id='numberTaken' value='TRUE' <?php if($work->getDocumentNumber()) echo"checked";?>>Получен номер из системы Аршин</label>
-                		<input type='text' name='documentNumber' <?php if($work->getDocumentNumber()) echo "value = {$work->getDocumentNumber()}";?>><br>
+                			<input type='hidden' name='processMods[numberTaken]' value='0'>
+                			<label><input type='checkbox' name='processMods[numberTaken]' id='numberTaken' value='1' <?php if($work->getDocumentNumber()) echo"checked";?>>Получен номер из системы Аршин</label>
+                			<input type='text' name='documentNumber' <?php if($work->getDocumentNumber()) echo "value = {$work->getDocumentNumber()}";?>><br>
                 		</div>
                 		<!-- Doc printed -->
                 		<div class=bordered>
-                		<input type='hidden' name='processMods[documentPrinted]' value='FALSE'>
-                		<label><input type='checkbox' id='docCheckbox' name='processMods[documentPrinted]' value='TRUE' <?php if($work->isDocumentPrinted()) echo"checked";?>>Свидетельство / извещение выписано</label><br>                		
-                		<input name='document' id='docInput'  type='file'/><br>
+                			<input type='hidden' name='processMods[documentPrinted]' value='0'>                		
+                			<label><input type='checkbox' id='docCheckbox' name='processMods[documentPrinted]' value='1' <?php if($work->isDocumentPrinted()) echo"checked";?>>Свидетельство / извещение выписано</label><br>                		
+                			<?php if($work->getDocumentLink()){echo "<a href='https://{$work->getDocumentLink()}'>Документ</a>";}?>
+                			<input name='document' id='docInput'  type='file'/><br>
                 		</div>
                 		<!-- Given away -->
                 		<div class=bordered>
-                		<input type='hidden' name='processMods[givenAway]' value='FALSE'>
-                		<label><input type='checkbox' name='processMods[givenAway]' value='TRUE' <?php if($work->isGivenAway()) echo"checked";?>>Прибор отдан</label><br>
+                			<input type='hidden' name='processMods[givenAway]' value='0'>
+                			<label><input type='checkbox' name='processMods[givenAway]' value='1' <?php if($work->isGivenAway()) echo"checked";?>>Прибор отдан</label><br>
                 		</div>
                 		<input type='submit' value='Сохранить изменения' name='processModified' style={width: 100%;}>
             		</form>
@@ -124,43 +172,6 @@
 		  }else{
 		      echo "<p>Работа с данным id = $workId не найдена</p>";
 		      echo "<a href='main.php'>На главную</a>";
-		  }
-		  if(isset($_REQUEST['processModified'])){
-		      if(isset($_REQUEST['processMods'])){
-		          $mods = $_REQUEST['processMods'];
-		          $work->setTaken($mods['taken']);
-		          $work->setMeasured($mods['measured']);
-		          $work->setProcessed($mods['processed']);
-		          $work->setDocumentPrinted($mods['documentPrinted']);
-		          $work->setMetrologyClosed($mods['metrologyClosed']);
-		          $work->setGivenAway($mods['givenAway']);
-		      }
-		      if(isset($_REQUEST['inv'])){
-		          $inv = $_REQUEST['inv'];
-		          $work->setTemperature($inv['t']);
-		          $work->setPreasure($inv['p']);
-		          $work->setHumidity($inv['h']);
-		      }
-		      $workRepo->modify($work);
-		      //files uploading
-		      $uploadPath = "/home/alex/uploads/";
-		      echo "uploadPath = $uploadPath ";
-		      //if protocol uploaded
-		      if(isset($_FILES['protocol'])){
-		          $uploadedProtocolRealName = $_FILES['protocol']['name'];
-		          echo "uploadedProtocolRealName = $uploadedProtocolRealName <br>";
-		          if (move_uploaded_file($_FILES['protocol']['tmp_name'], $uploadPath . $uploadedProtocolRealName)) {
-		              echo "Протокол успешно загружен <br>";
-		          }
-		      }
-		      //if document uploaded
-		      if(isset($_FILES['document'])){
-		          $uploadedDocumentRealName = $_FILES['document']['name'];
-		          echo "uploadedDocumentRealName = $uploadedDocumentRealName <br>";
-		          if (move_uploaded_file($_FILES['document']['tmp_name'], $uploadPath . $uploadedDocumentRealName)) {
-		              echo "Документ успешно загружен <br>";
-		          }
-		      }
 		  }
 		?>
 		<script type="text/javascript">

@@ -13,17 +13,17 @@
         </div>
         <div>
             <form action="addWork.php" method="POST">
-                <?php
+                <?php                   
+                    require_once "StaffRepository.php";
+                    require_once "DeviceRepository.php";
+                    require_once "WorkRepository.php";
+                    require_once "Work.php";
                     require_once "connection_config.php";
-                    require_once "workerRepository.php";
-                    require_once "deviceRepository.php";
-                    require_once "workRepository.php";
-                    require_once "work.php";
-                    $workerRepo = new WorkerRepository($host, $user, $password, $database);
+                    $staffRepo = new StaffRepository($host, $user, $password, $database);
                     $deviceRepo = new Devicerepository($host, $user, $password, $database);
                     $workRepo = new WorkRepository($host, $user, $password, $database);
-                    $verificators = $workerRepo->getVerificators();
-                    $managers = $workerRepo->getManagers();
+                    $verificators = $staffRepo->getVerificators();
+                    $managers = $staffRepo->getManagers();
                     $devices = $deviceRepo->getAll();
                     if(isset($_REQUEST['save'])){
                         $requestNumber = $_REQUEST['request_number'];

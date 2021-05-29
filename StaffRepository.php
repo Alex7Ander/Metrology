@@ -1,13 +1,13 @@
 <?php
-require_once "worker.php";
-class workerRepository{
+require_once "Staff.php";
+class StaffRepository{
     
     private $mysqli;
 
     public function __construct($host, $user, $password, $database){
         $this->mysqli = new mysqli($host, $user, $password, $database);
         if ($this->mysqli->connect_error) {
-            die("Error: creation object of workerRepository class failed (" . $this->mysqli->connect_errno . " - ". $this->mysqli->connect_error . ")");
+            die("Error: creation object of StaffRepository class failed (" . $this->mysqli->connect_errno . " - ". $this->mysqli->connect_error . ")");
         }
         $this->mysqli->set_charset('utf8');
     }
@@ -60,7 +60,7 @@ class workerRepository{
             $name = $value['name'];
             $surname = $value['surname'];
             $patronimyc = $value['patronimyc'];
-            $worker = new Worker($id, $name, $surname, $patronimyc);
+            $worker = new Staff($id, $name, $surname, $patronimyc);
             $workers["$id"] = $worker;
         }
         return $workers;

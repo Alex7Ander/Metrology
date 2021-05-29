@@ -1,7 +1,7 @@
 <?php
-require 'connection_config.php';
-require 'work.php';
-require 'workRepository.php';
+require_once 'connection_config.php';
+require_once 'Work.php';
+require_once 'WorkRepository.php';
 
 $id = $_POST['id'];
 $workRepo = new WorkRepository($host, $user, $password, $database);

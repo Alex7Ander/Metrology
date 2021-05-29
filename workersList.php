@@ -10,10 +10,10 @@
         </div>
         <div>
         <?php
-            require_once "workerRepository.php";
             require_once "connection_config.php";
-            $worekerRepo = new workerRepository($host, $user, $password, $database);
-            $workers = $worekerRepo->getAll();
+            require_once "StaffRepository.php";            
+            $staffRepo = new StaffRepository($host, $user, $password, $database);
+            $workers = $staffRepo->getAll();
             foreach($workers as $key=>$worker){
                 echo "$key) " . $worker . "<br>";
             }

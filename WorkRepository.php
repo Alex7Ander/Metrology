@@ -1,11 +1,11 @@
 <?php
-require_once 'device.php';
-require_once 'deviceRepository.php';
-require_once 'worker.php';
-require_once 'workerRepository.php';
+require_once 'Device.php';
+require_once 'DeviceRepository.php';
+require_once 'Staff.php';
+require_once 'StaffRepository.php';
 class WorkRepository{
     private $mysqli;
-    private $workerRepo;
+    private $staffRepo;
     private $deviceRepo;
     
     public function __construct($host, $user, $password, $database){
@@ -14,7 +14,7 @@ class WorkRepository{
             die("Error: creation object of workRepository class failed (" . $this->mysqli->connect_errno . " - ". $this->mysqli->connect_error . ")");
         }
         $this->mysqli->set_charset('utf8');
-        $this->workerRepo = new WorkerRepository($host, $user, $password, $database);
+        $this->staffRepo = new StaffRepository($host, $user, $password, $database);
         $this->deviceRepo = new Devicerepository($host, $user, $password, $database);
     }
 
@@ -53,6 +53,7 @@ class WorkRepository{
             }
             $query = "INSERT INTO works (verificator_id, manager_id, device_id, request_number, account_number, work_index, device_etalon_type, temperature, humidity, preasure, protocolLink, documentLink) 
                         VALUES ('$currentWorkVerificatorId', '$currentWorkManagerId', '$currentDeviceId', '$currentRequestNumber', '$currentAccountNumber', '$currentWorkIndex', '$currentEtalonType', '$temperature', '$humidity', '$preasure', '$protocolLink', '$documentLink')";
+            
             $this->mysqli->query($query);
             $query = "SELECT id AS newId FROM works WHERE device_id='$currentDeviceId' AND request_number='$currentRequestNumber' AND account_number='$currentAccountNumber'";
             $result = $this->mysqli->query($query);
@@ -94,7 +95,6 @@ class WorkRepository{
                 given_away = {$work->isGivenAway()},
                 document_number = '{$work->getDocumentNumber()}'
                 WHERE id='{$work->getId()}'";
-            echo "<br>$query<br>";
             $this->mysqli->query($query);
             $this->mysqli->commit();
         }
@@ -186,8 +186,8 @@ class WorkRepository{
             $verificatorId = $value['verificator_id'];
             $managerId = $value['manager_id'];
             $device = $this->deviceRepo->getById($deviceId);
-            $verificator = $this->workerRepo->getWorkerById($verificatorId);
-            $manager = $this->workerRepo->getWorkerById($managerId);
+            $verificator = $this->staffRepo->getWorkerById($verificatorId);
+            $manager = $this->staffRepo->getWorkerById($managerId);
             $requestNumber = $value['request_number'];
             $accountNumber = $value['account_number'];
             
@@ -213,7 +213,7 @@ class WorkRepository{
             $work->setMeasured($value['measured']);
             $work->setProcessed($value['processed']);
             $work->setMetrologyClosed($value['metrology_closed']);
-            $work->setDocumetnNumber($value['document_number']);
+            $work->setDocumentNumber($value['document_number']);
             $work->setDocumentPrinted($value['document_printed']);
             $work->setGivenAway($value['given_away']);
             $works["$id"] = $work;

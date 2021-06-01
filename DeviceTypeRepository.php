@@ -56,6 +56,23 @@ class DeviceTypeRepository
         }
     }
     
+    public function delete($type){
+        if(!($type instanceof DeviceType)){
+            die("Error: wrong type of parametr in method save (class DeviceTypeRepository)");
+        }
+        $this->mysqli->begin_transaction();
+        try{
+            $id = $type->getId();
+            $query = "DELETE FROM device_types WHERE id='$id'";
+            $this->mysqli->query($query);
+            $this->mysqli->commit();
+        }
+        catch(mysqli_sql_exception $exception){
+            $this->mysqli->rollback();
+            throw $exception;
+        }
+    }
+    
     public function getAll(){
         $query = "SELECT * FROM device_types";
         $result = $this->mysqli->query($query);
@@ -67,11 +84,12 @@ class DeviceTypeRepository
         $types = [];
         foreach($result as $value){
             $type = new DeviceType();
-            $type->setId($value['id']);
-            $type->setType($value['name']);
+            $id = $value['id'];
+            $type->setId($id);
+            $type->setName($value['name']);
             $type->setDesignation($value['designation']);
             $type->setStateNumber($value['state_number']);
-            $types[$type->getId()] = $type;
+            $types[$id] = $type;
         }
         return $types;
     }

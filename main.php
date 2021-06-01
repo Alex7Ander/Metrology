@@ -41,22 +41,22 @@
                 </div>
             </div>
             <div class="row">
-            	<div class="col-md3 linksblock">
+            	<div class="col-md-3 linksblock">
             		<h3>Приборы: </h3>
             		<a href="/metrology/devicesList.php">Приборы (для поверки)</a><br>
             		<a href="/metrology/addDeviceType.php">Добавить тип прибора</a><br>
             		<a href="/metrology/addDevice.php">Добавить прибор (для поверки)</a><br>
             	</div>
-            	<div class="col-md3 linksblock">
+            	<div class="col-md-3 linksblock">
             		<h3>Сотрудники: </h3>
             		<a href="/metrology/workersList.php">Список работников</a>
             		<a href="/metrology/addWorker.php">Добавить сотрудника</a>
             	</div>
-            	<div class="col-md3 linksblock">
+            	<div class="col-md-3 linksblock">
             		<h3>Задания: </h3>
                 	<a href="/metrology/addWork.php">Добавить работу</a>
                 </div>
-                <div class="col-md3">
+                <div class="col-md-3">
                 </div>
 			</div>
             <?php

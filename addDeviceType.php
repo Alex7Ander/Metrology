@@ -55,12 +55,13 @@
 		<div class = "container-fluid">
 			<div class="row">
     	        <div>
-                    <h1>Добавление нового типа средства измерения</h1>
+                    <h1>Типы средства измерения</h1>
                     <a href='/metrology/main.php'>На главную</a>
                 </div>
             </div>
             <div class="row">
-            	<div class="col-md-3">
+            	<div class="col-md-6">
+            		<h3>Добавить новый тип СИ</h3>
             		<form action='addDeviceType.php'>
             			<label for="name">Наименование типа:</label>
             			<input type="text" name="name"><br>
@@ -68,10 +69,11 @@
             			<input type="text" name="designation"><br>
             			<label for="stateNumber">Номер в гос. реестре:</label>
             			<input type="text" name="stateNumber"><br>
-            			<input type="submit" name="add" value="Добавить новый тип">
+            			<input type="submit" name="add" value="Сохранить">
             		</form>	
             	</div>
-            	<div class="col-md-9">
+            	<div class="col-md-6">
+            		<h3>Зарегистрированные типы СИ</h3>
             		<table>
             			<tr>
             				<th>№</th>
@@ -101,7 +103,7 @@
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Удаление СИ</h5>
+                <h5 class="modal-title">Удаление типа СИ</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>

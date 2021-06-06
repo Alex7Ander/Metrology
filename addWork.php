@@ -16,21 +16,31 @@
                 <?php                   
                     require_once "StaffRepository.php";
                     require_once "DeviceRepository.php";
+                    require_once "DeviceTypeRepository.php";
                     require_once "WorkRepository.php";
                     require_once "Work.php";
                     require_once "connection_config.php";
                     $staffRepo = new StaffRepository($host, $user, $password, $database);
-                    $deviceRepo = new Devicerepository($host, $user, $password, $database);
+                    $deviceRepo = new DeviceRepository($host, $user, $password, $database);
                     $workRepo = new WorkRepository($host, $user, $password, $database);
+                    $typesRepo = new DeviceTypeRepository($host, $user, $password, $database);
+                    
+                    
                     $verificators = $staffRepo->getVerificators();
                     $managers = $staffRepo->getManagers();
-                    $devices = $deviceRepo->getAll();
+                    $types = $typesRepo->getAll();                                  
+                    
                     if(isset($_REQUEST['save'])){
                         $requestNumber = $_REQUEST['request_number'];
                         $accountNumber = $_REQUEST['account_number'];                         
-                        $deviceId= $_REQUEST['device_id'];
-                        $device = $devices["$deviceId"];
-                        
+                        $typeId = $_REQUEST['type_id'];
+                        $type = $types["$typeId"];
+                        $serialNumber = $_REQUEST['device_serial_number'];
+                        $devices = $deviceRepo->getByTypeAndSerialNumber($type, $serialNumber);
+                        if(count($devices) == 0){
+                            $device = new Device($type, $serialNumber);
+                            $deviceRepo->save($device);
+                        }
                         $verificatorId = $_REQUEST['verificator_id'];
                         $verificator = $verificators["$verificatorId"];
                         $managerId = $_REQUEST['manager_id'];
@@ -41,8 +51,8 @@
                         $temperature = $_REQUEST['temperature'];
                         $humidity = $_REQUEST['humidity'];
                         $preasure = $_REQUEST['preasure'];
-
-                        $work = new Work();
+                        
+                        $work = new Work();                     
                         $work->setDevice($device);
                         $work->setRequestNumber($requestNumber);
                         $work->setAccountNumber($accountNumber);
@@ -87,12 +97,12 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="device_type">Прибор:</label>
+                            <label>Тип поверяемого СИ:</label>
                         </td>
-                        <td><select name="device_id"><?php 
-                                foreach($devices as $deviceId => $device){
-                                    echo "<option value=\"$deviceId\">$device</option>";
-                                }
+                        <td><select name="type_id"><?php                            
+                            foreach($types as $id => $type){
+                                echo "<option value=\"$id\">$type</option>";
+                            }
                             ?>
                         </td>
                     </tr>

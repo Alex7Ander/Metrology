@@ -80,6 +80,23 @@ class DeviceTypeRepository
         return $types;
     }
     
+    public function getById($id){
+        $query = "SELECT COUNT(*) AS typesCount FROM device_types WHERE id='$id'";
+        $result = $this->mysqli->query($query);
+        $row = $result->fetch_assoc();
+        $count = $row['typesCount'];
+        if($count == 0){
+            $result->close();
+            return null;
+        }
+        $query = "SELECT * FROM device_types WHERE id='$id'";
+        $result = $this->mysqli->query($query);
+        $types = $this->getTypesFromResult($result);
+        $type = $types[$id];
+        $result->close();
+        return $type;
+    }
+    
     private function getTypesFromResult($result){
         $types = [];
         foreach($result as $value){

@@ -7,7 +7,7 @@ class DeviceType{
     private $stateNumber;
     
     public function __toString(){
-        return $this->name . " " . $this->designation . " " . $this->stateNumber;  
+        return $this->name . " " . $this->designation . " (рег. № " . $this->stateNumber . ")";  
     }
     
     public function getId(){

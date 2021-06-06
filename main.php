@@ -43,14 +43,13 @@
             <div class="row">
             	<div class="col-md-3 linksblock">
             		<h3>Приборы: </h3>
-            		<a href="/metrology/devicesList.php">Приборы (для поверки)</a><br>
-            		<a href="/metrology/addDeviceType.php">Добавить тип прибора</a><br>
-            		<a href="/metrology/addDevice.php">Добавить прибор (для поверки)</a><br>
+            		<a href="/metrology/addDeviceType.php">Добавить тип СИ</a><br>
+            		<a href="/metrology/addDevice.php">Добавить СИ (для поверки)</a><br>
             	</div>
             	<div class="col-md-3 linksblock">
             		<h3>Сотрудники: </h3>
-            		<a href="/metrology/workersList.php">Список работников</a>
-            		<a href="/metrology/addWorker.php">Добавить сотрудника</a>
+            		<a href="/metrology/workersList.php">Список работников</a><br>
+            		<a href="/metrology/addWorker.php">Добавить сотрудника</a><br>
             	</div>
             	<div class="col-md-3 linksblock">
             		<h3>Задания: </h3>

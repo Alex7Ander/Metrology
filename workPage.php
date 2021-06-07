@@ -22,15 +22,7 @@
 		  require_once 'connection_config.php';
 		  require_once 'Work.php';
 		  require_once 'WorkRepository.php';
-		  
-		  function removeUploadedFile($index, $to){
-		      $uploadedFileRealName = $_FILES[$index]['name'];
-		      $uploadedFileRealName = uniqid(rand()) . "_" . str_replace(" ", "_", $uploadedFileRealName);
-		      if (move_uploaded_file($_FILES[$index]['tmp_name'], $to . $uploadedFileRealName)) {
-		          return $to . $uploadedFileRealName;
-		      }
-		      return null;
-		  }
+          require_once 'Uploader.php';		  
 		  
 		  $workId = $_REQUEST["workId"];
 		  $workRepo = new WorkRepository($host, $user, $password, $database);
@@ -40,7 +32,7 @@
 		          $mods = $_REQUEST['processMods'];
 		          $work->setTaken($mods['taken']);
 		          $work->setMeasured($mods['measured']);
-		          $work->setEtalonType($_REQUEST['device_etalon_type']);
+		          $work->setStandartType($_REQUEST['standart_type']);
 		          $work->setProcessed($mods['processed']);		          
 		          $work->setMetrologyClosed($mods['metrologyClosed']);		          
 		          $work->setDocumentNumber($_REQUEST['documentNumber']);
@@ -71,7 +63,7 @@
 		      $currentVerificator = $work->getVerificator();
 		      $currentManager = $work->getManager();
 		      $currentDevice = $work->getDevice();
-		      $currentStandartType = $work->getEtalonType();
+		      $currentStandartType = $work->getStandartType();
 		      $t = $work->getTemperature();
 		      $h = $work->getHumidity();
 		      $p = $work->getPreasure();
@@ -126,7 +118,7 @@
                                 </tr>
                         	</table>
                         	<p>И на основании результатов поверки определено место по поверочной схеме как:</p>
-                            <select name="device_etalon_type">
+                            <select name="standart_type">
                                 <option>Рабочее средство измерения</option>
                                 <option>Эталон 2-го рязряда</option>
                                 <option>Эталон 1-го разряда</option>

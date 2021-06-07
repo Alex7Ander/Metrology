@@ -101,7 +101,7 @@ class DeviceRepository{
         $result = $this->mysqli->query($query);
         $devices = $this->getDevicesFromResult($result);
         $result->close();
-        return $devices;
+        return current($devices);
     }
 
     private function getDevicesFromResult($result){

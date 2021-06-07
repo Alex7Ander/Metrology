@@ -9,7 +9,7 @@ class Work{
     
     private $workIndex;
     private $verificationDate;
-    private $etalonType;
+    private $standartType;
     private $temperature; 
     private $humidity; 
     private $preasure;
@@ -70,11 +70,11 @@ class Work{
         $this->verificationDate = $verificationDate;
     }
     
-    public function getEtalonType(){
-        return $this->etalonType;
+    public function getStandartType(){
+        return $this->standartType;
     }
-    public function setEtalonType($etalonType){
-        $this->etalonType = $etalonType;
+    public function setStandartType($standartType){
+        $this->standartType = $standartType;
     }
 
     public function getTemperature(){

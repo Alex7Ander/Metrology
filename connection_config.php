@@ -4,6 +4,7 @@ $database = 'heroku_085b624a0702fa1';
 $user = 'b7cbcb7edb2bbf'; 
 $password = '5cbfaa59';
 
-$fullUploadPath = 'C:\\localhost\\uploads\\'; /*/home/alex/uploads/*/
-$recordUploadPath = '..\\\\uploads\\\\';
+$fullUploadPath = 'C:\\localhost\\uploads\\';
+//$recordUploadPath = '..\\\\uploads\\\\';
+$recordUploadPath = "/home/alex/uploads/";
 ?>

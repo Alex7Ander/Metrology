@@ -77,7 +77,7 @@
                     $exampleWork->setRequestNumber($_REQUEST['requestNumber']);
                     $exampleWork->setAccountNumber($_REQUEST['accountNumber']);
                     $exampleWork->setWorkIndex($_REQUEST['workIndex']);
-                    $exampleWork->setEtalonType($_REQUEST['etalonType']);
+                    $exampleWork->setStandartType($_REQUEST['standartType']);
                     $exDevice = $deviceRepo->getById($_REQUEST['deviceId']);
                     $exampleWork->setDevice($exDevice);
                     $exManager = $staffRepo->getWorkerById($_REQUEST['managerId']);
@@ -138,7 +138,7 @@
                                     echo "<option value='$currentDeviceId'>$device</option>";
                                 }
                             ?></select></td>
-                            <td><select name="etalonType" class='noBorder'>
+                            <td><select name="standartType" class='noBorder'>
                             	<option></option>
                             	<option>Рабочее средство измерения</option>
                             	<option>Эталон 2-го рязряда</option>
@@ -161,7 +161,7 @@
                                 $currentVerificator = $work->getVerificator();
                                 $currentManager = $work->getManager();
                                 $currentDevice = $work->getDevice();
-                                $currentStandartType = $work->getEtalonType();                                
+                                $currentStandartType = $work->getStandartType();                                
                                 echo "<tr>";  
                                 echo "<td><p>-</p></td>";
                                 echo "<td><p>$currentWorkIndex</p></td>";

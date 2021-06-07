@@ -1,4 +1,4 @@
-<?php
+<?php 
 class Staff{
     private $id;
     private $name;
@@ -15,8 +15,7 @@ class Staff{
     }
 
     public function __toString(){
-        $str = $this->getFullName() . " (id=" . $this->getId() . ")";
-        return $str;
+        return $this->getFullName();
     }
 
     public function getId(){

@@ -31,19 +31,9 @@ class WorkRepository{
             $currentWorkManagerId = null;
             if($work->getVerificator() != null){
                 $currentWorkManagerId = $work->getManager()->getId();
-            }           
-            $currentDeviceId = $work->getDevice()->getId();
-            $currentRequestNumber = $work->getRequestNumber();
-            $currentAccountNumber = $work->getAccountNumber();  
-            $currentWorkIndex = $work->getWorkIndex();
-            $currentEtalonType = $work->getEtalonType();
-            $temperature = $work->getTemperature();
-            $humidity = $work->getHumidity();
-            $preasure = $work->getPreasure();
-            $protocolLink = $work->getProtocolLink();
-            $documentLink = $work->getDocumentLink();
+            }
             
-            $query = "SELECT COUNT(*) AS workCount FROM works WHERE device_id='$currentDeviceId' AND request_number='$currentRequestNumber' AND account_number='$currentAccountNumber'";
+            $query = "SELECT COUNT(*) AS workCount FROM works WHERE device_id='{$work->getDevice()->getId()}' AND request_number='{$work->getRequestNumber()}' AND account_number='{$work->getAccountNumber()}'";
             $result = $this->mysqli->query($query);
             $row = $result->fetch_assoc();
             $count = $row['workCount'];
@@ -51,17 +41,39 @@ class WorkRepository{
                 echo "<b>Ошибка! Работа с такими же номерами заявки и счета для данного прибора уже зарегистрирована!</b><br>";
                 return;
             }
-            $query = "INSERT INTO works (verificator_id, manager_id, device_id, request_number, account_number, work_index, device_etalon_type, temperature, humidity, preasure, protocolLink, documentLink) 
-                        VALUES ('$currentWorkVerificatorId', '$currentWorkManagerId', '$currentDeviceId', '$currentRequestNumber', '$currentAccountNumber', '$currentWorkIndex', '$currentEtalonType', '$temperature', '$humidity', '$preasure', '$protocolLink', '$documentLink')";
-            
-            $this->mysqli->query($query);
-            $query = "SELECT id AS newId FROM works WHERE device_id='$currentDeviceId' AND request_number='$currentRequestNumber' AND account_number='$currentAccountNumber'";
-            $result = $this->mysqli->query($query);
+            $query = "INSERT INTO works (device_id,
+                                        verificator_id, 
+                                        manager_id,                                     
+                                        verification_date,
+                                        request_number, 
+                                        account_number, 
+                                        work_index, 
+                                        standart_type, 
+                                        temperature, 
+                                        humidity, 
+                                        preasure, 
+                                        protocol_link, 
+                                        document_link) 
+                                        VALUES ('{$work->getDevice()->getId()}',
+                                                '$currentWorkVerificatorId', 
+                                                '$currentWorkManagerId', 
+                                                '{$work->getVerificationDate()}',
+                                                '{$work->getRequestNumber()}', 
+                                                '{$work->getAccountNumber()}', 
+                                                '{$work->getWorkIndex()}', 
+                                                '{$work->getStandartType()}', 
+                                                '{$work->getTemperature()}', 
+                                                '{$work->getHumidity()}', 
+                                                '{$work->getPreasure()}', 
+                                                '{$work->getProtocolLink()}', 
+                                                '{$work->getDocumentLink()}')";            
+            $this->mysqli->query($query);                        
+            $query = "SELECT id AS newId FROM works WHERE device_id='{$work->getDevice()->getId()}' AND request_number='{$work->getRequestNumber()}' AND account_number='{$work->getAccountNumber()}'";
+            $result = $this->mysqli->query($query);            
             $id = $result->fetch_assoc()['newId'];
             $work->setId($id);            
             $result->close();
             $this->mysqli->commit();
-            echo "<b>Задание успешно добавлено</b><br>";
         }
         catch(mysqli_sql_exception $exception){
             $this->mysqli->rollback();
@@ -75,18 +87,19 @@ class WorkRepository{
         }
         $this->mysqli->begin_transaction();
         try{
-            $query = "UPDATE works SET verificator_id='{$work->getVerificator()->getId()}', 
+            $query = "UPDATE works SET device_id = '{$work->getDevice()->getId()}', 
+                verificator_id='{$work->getVerificator()->getId()}', 
                 manager_id = '{$work->getManager()->getId()}',
-                device_id = '{$work->getDevice()->getId()}',
+                verification_date = '{$work->getVerificationDate()}',
                 request_number = '{$work->getRequestNumber()}',
                 account_number = '{$work->getAccountNumber()}',
                 work_index = '{$work->getWorkIndex()}',
-                device_etalon_type = '{$work->getEtalonType()}',
+                standart_type = '{$work->getStandartType()}',
                 temperature = '{$work->getTemperature()}',
                 humidity = '{$work->getHumidity()}',
                 preasure = '{$work->getPreasure()}',
-                protocolLink = '{$work->getProtocolLink()}',
-                documentLink = '{$work->getDocumentLink()}',
+                protocol_link = '{$work->getProtocolLink()}',
+                document_link = '{$work->getDocumentLink()}',
                 taken = {$work->isTaken()},
                 measured = {$work->isMeasured()},
                 processed = {$work->isProcessed()},
@@ -125,10 +138,6 @@ class WorkRepository{
         if(!($work instanceof Work)){
             die("Error: wrong type of parametr in method getByExample (class workRepository)");
         }
-        $exRequestNumber = $work->getRequestNumber();
-        $exAccountNumber = $work->getAccountNumber();
-        $exWorkIndex = $work->getWorkIndex();
-        $exEtalonType = $work->getEtalonType();
         $exVerificatorId = '';
         if($work->getVerificator() != null){
             $exVerificatorId = $work->getVerificator()->getId();
@@ -141,10 +150,10 @@ class WorkRepository{
         if($work->getDevice() != null){
             $exDeviceId = $work->getDevice()->getId(); 
         }       
-        $query = "SELECT * FROM works WHERE request_number LIKE '%$exRequestNumber%' 
-                    AND account_number LIKE '%$exAccountNumber%' 
-                    AND work_index LIKE '%$exWorkIndex%' 
-                    AND device_etalon_type LIKE '%$exEtalonType%' 
+        $query = "SELECT * FROM works WHERE request_number LIKE '%{$work->getRequestNumber()}%' 
+                    AND account_number LIKE '%{$work->getAccountNumber()}%' 
+                    AND work_index LIKE '%{$work->getWorkIndex()}%' 
+                    AND standart_type LIKE '%{$work->getStandartType()}%' 
                     AND verificator_id LIKE '%$exVerificatorId%' 
                     AND manager_id LIKE '%$exManagerId%' 
                     AND device_id LIKE '%$exDeviceId%'";
@@ -202,13 +211,13 @@ class WorkRepository{
             $work->setVerificator($verificator);
             $work->setManager($manager);            
             $work->setWorkIndex($value['work_index']);            
-            $work->setVerificationDate($value['work_index']);            
-            $work->setEtalonType($value['device_etalon_type']);
+            $work->setVerificationDate($value['verification_date']);            
+            $work->setStandartType($value['standart_type']);
             $work->setTemperature($value['temperature']);
             $work->setHumidity($value['humidity']);
             $work->setPreasure($value['preasure']);
-            $work->setProtocolLink($value['protocolLink']);
-            $work->setDocumentLink($value['documentLink']);
+            $work->setProtocolLink($value['protocol_link']);
+            $work->setDocumentLink($value['document_link']);
             $work->setTaken($value['taken']);
             $work->setMeasured($value['measured']);
             $work->setProcessed($value['processed']);

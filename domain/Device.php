@@ -5,7 +5,7 @@ class Device{
     private $deviceType; 
     private $serialNumber;
 
-    public function __construct($deviceType, $serialNumber){
+    public function __construct($deviceType, $serialNumber = 0){
         $this->deviceType = $deviceType; 
         $this->serialNumber = $serialNumber;
     }

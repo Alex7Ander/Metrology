@@ -1,15 +1,4 @@
 <?php
-require_once 'connection_config.php';
-
-function removeUploadedFile($index, $to){
-    $uploadedFileRealName = $_FILES[$index]['name'];
-    $uploadedFileRealName = uniqid(rand()) . "_" . str_replace(" ", "_", $uploadedFileRealName);
-    if (move_uploaded_file($_FILES[$index]['tmp_name'], $to . $uploadedFileRealName)) {
-        return $to . $uploadedFileRealName;
-    }
-    return null;
-}
-
 class Uploader{
     
     private $token;
@@ -42,22 +31,24 @@ class Uploader{
         return $res;
     }
     
-    public function uploadFile($pathFrom, $pathTo){
-        //Sending GET request for getting uploding url
-        $baseName = basename($pathFrom);        
-        $ch = curl_init('https://cloud-api.yandex.net/v1/disk/resources/upload?path=' . urlencode($pathTo . $baseName));
+    //Uploading files to yandex disk
+    //$pathFrom - path (full) to the file on the server where the script is running
+    //$fileName - name, which should be used on yandex disk
+    //$pathTo - target folder on yandex disk
+    public function uploadFile($pathFrom, $fileName, $pathTo){
+        //Sending GET request for getting uploding url        
+        $ch = curl_init('https://cloud-api.yandex.net/v1/disk/resources/upload?path=' . urlencode($pathTo . $fileName));
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth ' . $this->token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HEADER, false);
         $res = curl_exec($ch);
         curl_close($ch);        
-        $res = json_decode($res, true);
-        var_dump($res);        
+        $res = json_decode($res, true);        
         if (!empty($res['error'])) {
-            throw new Exception();
+            throw new Exception($res['error']);
         }
-        //If there is no errors sending file by url
+        //If there is no errors - sending file by url
         $fp = fopen($pathFrom, 'r');        
         $ch = curl_init($res['href']);
         curl_setopt($ch, CURLOPT_PUT, true);
@@ -75,6 +66,21 @@ class Uploader{
         } 
     }
     
+    public function getDownloadingLink($ydPath){       
+        $ch = curl_init('https://cloud-api.yandex.net/v1/disk/resources/download?path=' . urlencode($ydPath));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth ' . $this->token));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        $res = curl_exec($ch);
+        curl_close($ch);        
+        $res = json_decode($res, true);
+        if (!(empty($res['error']))) {
+            throw new Exception($res['error']);
+        }
+        return $res['href'];
+    }
+    
     public function delete($path){
         echo "$path<br>";
         $ch = curl_init('https://cloud-api.yandex.net/v1/disk/resources?path=' . urlencode($path) . '&permanently=true');        
@@ -83,7 +89,7 @@ class Uploader{
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);        
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);        
         curl_setopt($ch, CURLOPT_HEADER, false);       
-        $res = curl_exec($ch);        
+        curl_exec($ch);        
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE); 
         curl_close($ch);
         if (!(in_array($http_code, array(202, 204)))) {            

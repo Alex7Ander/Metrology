@@ -1,5 +1,4 @@
 <?php
-require_once "Staff.php";
 class StaffRepository{
     
     private $mysqli;
@@ -60,11 +59,16 @@ class StaffRepository{
             $name = $value['name'];
             $surname = $value['surname'];
             $patronimyc = $value['patronimyc'];
+            $pass = $value['pass'];
+            $isverificator = $value['verificator_status'];
+            $ismanager = $value['manager_status'];
             $worker = new Staff($id, $name, $surname, $patronimyc);
+            $worker->setPass($pass);
+            $worker->setVerificatorStatus($isverificator);
+            $worker->setManagerStatus($ismanager);
             $workers["$id"] = $worker;
         }
         return $workers;
     }    
 
 }
-?>

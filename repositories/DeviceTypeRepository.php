@@ -1,12 +1,4 @@
 <?php
-require_once 'DeviceType.php';
-
-class StateNumberAlreadyUsedException extends Exception {
-    public function __construct(){
-        $this->message = "Тип средства измерения с данным государственным регистриционным номером в ФИФ уже существует";
-    }
-}
-
 class DeviceTypeAlreadyExistingException extends Exception {
     public function __construct($type){
         $this->message = "Данный тип средства измерения: $type - уже зарегистрирован";
@@ -45,7 +37,7 @@ class DeviceTypeRepository
             $this->mysqli->query($query);           
             $query = "SELECT id FROM device_types WHERE name='$currentName' AND designation='$currentDesignation' AND state_number='$currentStateNumber'";
             $result = $this->mysqli->query($query);
-            $id = $result->fetch_assoc()['newId'];
+            $id = $result->fetch_assoc()['id'];
             $type->setId($id);
             $result->close();
             $this->mysqli->commit();

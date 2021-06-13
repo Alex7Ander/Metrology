@@ -1,8 +1,4 @@
 <?php
-require_once 'Device.php';
-require_once 'DeviceRepository.php';
-require_once 'Staff.php';
-require_once 'StaffRepository.php';
 class WorkRepository{
     private $mysqli;
     private $staffRepo;
@@ -15,7 +11,7 @@ class WorkRepository{
         }
         $this->mysqli->set_charset('utf8');
         $this->staffRepo = new StaffRepository($host, $user, $password, $database);
-        $this->deviceRepo = new Devicerepository($host, $user, $password, $database);
+        $this->deviceRepo = new DeviceRepository($host, $user, $password, $database);
     }
 
     public function save($work){        
@@ -53,7 +49,14 @@ class WorkRepository{
                                         humidity, 
                                         preasure, 
                                         protocol_link, 
-                                        document_link) 
+                                        document_link, 
+                                        taken, 
+                                        measured, 
+                                        processed, 
+                                        metrology_closed, 
+                                        document_printed, 
+                                        given_away, 
+                                        document_number) 
                                         VALUES ('{$work->getDevice()->getId()}',
                                                 '$currentWorkVerificatorId', 
                                                 '$currentWorkManagerId', 
@@ -66,7 +69,14 @@ class WorkRepository{
                                                 '{$work->getHumidity()}', 
                                                 '{$work->getPreasure()}', 
                                                 '{$work->getProtocolLink()}', 
-                                                '{$work->getDocumentLink()}')";            
+                                                '{$work->getDocumentLink()}',
+                                                '{$work->isTaken()}',
+                                                '{$work->isMeasured()}',
+                                                '{$work->isProcessed()}',
+                                                '{$work->isMetrologyClosed()}',
+                                                '{$work->isDocumentPrinted()}',
+                                                '{$work->isGivenAway()}',
+                                                '{$work->getDocumentNumber()}')";            
             $this->mysqli->query($query);                        
             $query = "SELECT id AS newId FROM works WHERE device_id='{$work->getDevice()->getId()}' AND request_number='{$work->getRequestNumber()}' AND account_number='{$work->getAccountNumber()}'";
             $result = $this->mysqli->query($query);            
@@ -156,7 +166,7 @@ class WorkRepository{
                     AND standart_type LIKE '%{$work->getStandartType()}%' 
                     AND verificator_id LIKE '%$exVerificatorId%' 
                     AND manager_id LIKE '%$exManagerId%' 
-                    AND device_id LIKE '%$exDeviceId%'";
+                    AND device_id IN (select id from devices where device_type_id = '{$work->getDevice()->getDeviceType()->getId()}')";
         $result = $this->mysqli->query($query);
         $works = $this->getWorksFromResult($result);
         $result->close();
@@ -231,4 +241,3 @@ class WorkRepository{
     }
 
 }
-?>

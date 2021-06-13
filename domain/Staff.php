@@ -6,7 +6,8 @@ class Staff{
     private $patronimyc;
     private $verificatorStatus;
     private $managerStatus;
-
+    private $pass;
+    
     public function __construct($id, $name, $surname, $patronimyc, $verificatorStatus=true, $managerStatus=false){
         $this->id = $id;
         $this->name = $name;
@@ -39,6 +40,14 @@ class Staff{
     public function getManagerStatus(){
         return $this->managerStatus;
     }
+    
+    public function getPass(){
+        return $this->pass;
+    }
+    public function setPass($pass){
+        $this->pass = $pass;
+    }
+    
 
 }
 ?>

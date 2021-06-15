@@ -45,8 +45,8 @@
                     <p>Номер счета: <i><?=$currentAccountNumber?></i></p>
         		    <p>Поверитель: <i><?=$currentVerificator?></i></p>
                     <p>Ответственный за закрытие работы: <i><?=$currentManager?></i></p>                        
-					<button class="minWidth">Редактировать</button>
-					<button class="minWidth" value="Удалить" onclick="setInfo(<?=$work->getId()?>)">Удалить</button>						
+					<button class="minWidth" onclick="showPopUp('popUpEditMainInfo')">Редактировать</button>
+					<button class="minWidth" value="Удалить" onclick="showPopUp('popUp')">Удалить</button>						
 				</div>
 
 				<div class="rightCol">
@@ -155,10 +155,59 @@
 				<h1 class="simpleBlackText">Вы уверены, что хотите удалить задание на поверку</h1>
 				<p id="typeInfo"></p>
 				<form action="work.php" method="POST">
-              		<input type="hidden" id="delIdInput" name="workId">
+              		<input type="hidden" id="delIdInput" name="workId" value="<?=$work->getId()?>">
               		<input type="submit" class="simpleSubmit" name="del" value="Удалить">
               	</form>
-				<input type="button" class="simpleSubmit" value="Отмена" onclick='hidePopUp();'>
+				<input type="button" class="simpleSubmit" value="Отмена" onclick='hidePopUp("popUp");'>
+			</div>
+		</div>
+		<div class="popup" id="popUpEditMainInfo">
+			<div class="popup-content">
+				<h1 class="simpleBlackText">Редактирование основной информации о задании</h1>
+				<form action="work.php" method="POST">
+              		<input type="hidden" id="modIdInput" name="workId" value="<?=$work->getId()?>">
+              		Тип СИ: <select name="typeId">
+              			<?php 
+              			foreach($types as $id => $type){
+              			    if($work->getDevice()->getDeviceType()->getId() == $id){
+              			        echo "<option value=$id selected>$type</option>";
+              			    }
+              			    else{
+              			        echo "<option value=$id>$type</option>";
+              			    }
+              			}
+              			?>
+              		</select><br>
+              		Серийный номер: <input type="text" name="serialNumber" value="<?=$work->getDevice()->getSerialNumber()?>"><br>
+              		Номер заявки: <input type="text" name="requestNumber" value="<?=$work->getRequestNumber()?>"c><br>
+              		Номер счета: <input type="text" name="accountNumber" value="<?=$work->getAccountNumber()?>"><br>
+              		Поверитель:<select name="verificatorId"><br>
+              		    <?php 
+              			foreach($verificators as $id => $verificator){
+              			    if($work->getVerificator()->getId() == $id){
+              			        echo "<option value='$id' selected>$verificator</option>";
+              			    }
+              			    else{
+              			        echo "<option value='$id'>$verificator</option>";
+              			    }
+              			}
+              			?>
+              		</select><br>
+              		Ответственный за закрытие работы:<select name="managerId">
+              			<?php 
+              			foreach($managers as $id => $manager){
+              			    if($work->getManager()->getId() == $id){
+              			        echo "<option value='$id' selected>$manager</option>";
+              			    }
+              			    else{
+              			        echo "<option value='$id'>$manager</option>";
+              			    }
+              			}
+              			?>
+              		</select><br>
+              		<input type="submit" class="simpleSubmit" name="editMainInfo" value="Редактировать">
+              	</form>
+				<input type="button" class="simpleSubmit" value="Отмена" onclick='hidePopUp("popUpEditMainInfo");'>
 			</div>
 		</div>
 		<script src="./templates/static/js/scripts.js"></script>

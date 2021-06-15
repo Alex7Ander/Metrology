@@ -39,7 +39,7 @@
 			</div>
 			<div class="main">
 				<div class="leftCol">
-					<form method='GET' action='addDeviceType.php'>
+					<form method='GET' action='types.php'>
 						<h2>Добавить новый тип СИ</h2>
 						Наименование типа: <input type="text" name="name">
             			Обозначение типа: <input type="text" name="designation">

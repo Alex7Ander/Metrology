@@ -60,6 +60,18 @@ class DeviceRepository{
             throw $exception;
         }
     }
+    
+    public function isExists($device){
+        $query = "SELECT COUNT(*) AS deviceCount FROM devices WHERE device_type_id = '{$device->getDeviceType()->getId()}' 
+                                                                AND serial_number = '{$device->getSerialNumber()}'";
+        $result = $this->mysqli->query($query);
+        $row = $result->fetch_assoc();
+        $count = $row['deviceCount'];
+        if($count > 0){
+            return true;
+        }
+        return false;
+    }
 
     public function getAll(){
         $query = "SELECT * FROM devices";

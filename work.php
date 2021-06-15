@@ -23,13 +23,42 @@ $ydUploader = new Uploader($yandexDiskToken);
 $standartTypes = Array("Рабочее средство измерения", "Эталон 2-го рязряда", "Эталон 1-го разряда", "Вторичный эталон");
 $workId = $_REQUEST["workId"];
 $workRepo = new WorkRepository($host, $user, $password, $database);
+$deviceRepo = new DeviceRepository($host, $user, $password, $database);
+$typesRepo = new DeviceTypeRepository($host, $user, $password, $database);
+$staffRepo = new StaffRepository($host, $user, $password, $database);
 $work = $workRepo->getById($workId);
+$types = $typesRepo->getAll();
+$verificators = $staffRepo->getVerificators();
+$managers = $staffRepo->getManagers();
 
 if($work){
     if(isset($_REQUEST['del'])){
-        echo "DELETING <br>";
         $workRepo->delete($work);
         header('Location: index.php');
+    }
+    
+    if(isset($_REQUEST['editMainInfo'])){
+        //Compare device type 
+        $newType = $types[$_REQUEST['typeId']];
+        //getting device from db by type and serial number, which were sent by user
+        $otherDevice = $deviceRepo->getByTypeAndSerialNumber($newType, $_REQUEST['serialNumber']);
+        //if there is no such device in db, creating the new one and saving it
+        if($otherDevice == null){
+            $otherDevice = new Device($newType, $_REQUEST['serialNumber']);
+            $deviceRepo->save($otherDevice);
+        }
+        //comparing device with new user parametrs with curent work's device
+        if($otherDevice != $work->getDevice()){
+            //if they are different, setting new device for work
+            $work->setDevice($otherDevice);
+        }       
+        //setting other parametrs
+        $work->setAccountNumber($_REQUEST['accountNumber']);
+        $work->setRequestNumber($_REQUEST['requestNumber']);        
+        $work->setVerificator($verificators[$_REQUEST['verificatorId']]);
+        $work->setManager($managers[$_REQUEST['managerId']]);
+
+        $workRepo->modify($work);
     }
     
     if(isset($_REQUEST['processModified'])){

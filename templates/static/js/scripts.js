@@ -1,16 +1,23 @@
-document.addEventListener("DOMContentLoaded", hidePopUp);
+document.addEventListener("DOMContentLoaded", hideAllPopUp);
 
 function setInfo(id){
     document.getElementById('delIdInput').value = id;
-    showPopUp();
+    showPopUp('popUp');
 }
 
-function showPopUp(){
-    let popUpWindow = document.getElementById('popUp');
+function showPopUp(popUpId){
+    let popUpWindow = document.getElementById(popUpId);
     popUpWindow.style.display = "";
 }
 
-function hidePopUp(){
-    let popUpWindow = document.getElementById('popUp');
+function hidePopUp(popUpId){
+    let popUpWindow = document.getElementById(popUpId);
     popUpWindow.style.display = "none";
+}
+
+function hideAllPopUp(){
+	let popUpWindows = document.getElementsByClassName("popup");
+	for(let win of popUpWindows){
+		win.style.display = "none";
+	}	
 }

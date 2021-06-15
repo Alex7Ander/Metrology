@@ -53,7 +53,7 @@
                         <p>
                         	Серийный номер: <input type="text" name="serial_number">
                         </p>
-                		<input type="submit" name="save" value="Сохранить" class="simpleSubmit">
+                		<button type="submit" class="minWidth" name="save" value="Сохранить">Сохранить</button>
             		</form>
 				</div>
 

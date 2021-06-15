@@ -78,7 +78,7 @@ if(isset($_REQUEST['save'])){
             $fileName = uniqid(rand()) . "_" . str_replace(" ", "_", $fileName);
             $pathTo = "/ApplicationsFolder/Metrology/Documents/";
             $ydUploader->uploadFile($pathFrom, $fileName, $pathTo);
-            $work->setProtocolLink($pathTo . $fileName);
+            $work->setDocumentLink($pathTo . $fileName);
         }
     }                       
     $workRepo->save($work);

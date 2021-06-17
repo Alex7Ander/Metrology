@@ -13,10 +13,7 @@ class DeviceRepository{
         $this->mysqli->set_charset('utf8');
     }
 
-    public function save($device){
-        if(!($device instanceof Device)){
-            die("Error: wrong type of parametr in method save (class deviceRepository)");
-        }
+    public function save(Device $device){
         $this->mysqli->begin_transaction();
         try{
             $currentType = $device->getDeviceType();
@@ -26,8 +23,7 @@ class DeviceRepository{
             $row = $result->fetch_assoc();      
             $count = $row['deviceCount'];
             if($count > 0){
-                echo "<b>Ошибка! Прибор данного типа с таким серийным номером уже существует!</b><br>";
-                return;
+                throw new Exception("Прибор данного типа с таким серийным номером уже существует!");
             }
             $query = "INSERT INTO devices (device_type_id, serial_number) VALUES ('{$currentType->getId()}', '$currentSerialNumber')";
             $result = $this->mysqli->query($query);            

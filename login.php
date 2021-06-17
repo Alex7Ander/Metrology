@@ -14,6 +14,7 @@ if(isset($_POST['login'])){
     $currentWorker = $workers[$staffId];
     if($currentWorker->getPass() == $pass){
         $_SESSION['username'] = $currentWorker->getFullName();
+        $_SESSION['accessLevel'] = $currentWorker->getAccessLevel();
         header('Location: index.php');
     }
 }

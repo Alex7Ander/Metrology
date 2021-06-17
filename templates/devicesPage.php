@@ -39,7 +39,7 @@
 			</div>
 			<div class="main">
 				<div class="leftCol">
-					<h3>Добавить новое СИ</h3>
+					<h1>Добавить новое СИ</h1>
             		<form method="POST" action="addDevice.php">
 						<p>
 							Тип прибора:<select name='type_id'>
@@ -58,7 +58,7 @@
 				</div>
 
 				<div class="rightCol">
-					<h3>Зарегистрированные СИ</h3>
+					<h1>Зарегистрированные СИ</h1>
                 	<table>
                 		<tr>
                 			<th>№</th>

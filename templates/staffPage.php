@@ -38,6 +38,38 @@
 				</ul>
 			</div>
 			<div class="main">
+				<?php 
+				if($_SESSION['accessLevel'] == 10){
+				    
+				?>				
+        		<div class="leftCol">
+    				<h1>Добавить нового сотрудника</h1>
+    				<?php 
+    				if(isset($errorMessage)){
+    				    echo "<b>$errorMessage</b><br>";
+    				}
+    				?>
+            		<form method="POST" action="staff.php">
+						Имя: <input type="text" name="name">
+						Фамилия: <input type="text" name="surname">
+						Отчество: <input type="text" name="patronimyc">
+						Пароль: <input type="text" name="pass">
+						<input type="hidden" name="verificator_status" value="0">
+						<label><input type="checkbox" name="verificator_status" value="1">Поверитель</label><br>
+						<input type="hidden" name="manager_status" value="0">
+						<label><input type="checkbox" name="manager_status" value="1">Менеджер</label><br>
+						Права доступа:
+						<select name="access_level">
+							<option value="1" selected>Пользователь</option>
+							<option value="10">Администратор</option>
+						</select>						
+                		<button type="submit" class="minWidth" name="save" value="Сохранить">Сохранить</button>
+                		<button type="reset" class="minWidth">Очистить</button>
+            		</form>
+        		</div>
+        		<?php 
+				}
+        		?>
 				<div class="rightCol">
 					<h1>Сотрудники</h1>
                     <table>

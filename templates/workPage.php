@@ -44,9 +44,11 @@
 					<p>Номер заявки: <i><?=$currentRequestNumber?></i></p>
                     <p>Номер счета: <i><?=$currentAccountNumber?></i></p>
         		    <p>Поверитель: <i><?=$currentVerificator?></i></p>
-                    <p>Ответственный за закрытие работы: <i><?=$currentManager?></i></p>                        
+                    <p>Ответственный за закрытие работы: <i><?=$currentManager?></i></p>
+                    <?php if($_SESSION['accessLevel'] == 10){?>	                        
 					<button class="minWidth" onclick="showPopUp('popUpEditMainInfo')">Редактировать</button>
-					<button class="minWidth" value="Удалить" onclick="showPopUp('popUp')">Удалить</button>						
+					<button class="minWidth" value="Удалить" onclick="showPopUp('popUp')">Удалить</button>	
+					<?php }?>					
 				</div>
 
 				<div class="rightCol">

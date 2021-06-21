@@ -47,12 +47,13 @@ if($work){
             $otherDevice = new Device($newType, $_REQUEST['serialNumber']);
             $deviceRepo->save($otherDevice);
         }
-        //comparing device with new user parametrs with curent work's device
+        //comparing device (with new user parametrs) and curent work's device
         if($otherDevice != $work->getDevice()){
             //if they are different, setting new device for work
             $work->setDevice($otherDevice);
         }       
         //setting other parametrs
+        $work->setWorkIndex($_REQUEST['workIndex']);
         $work->setAccountNumber($_REQUEST['accountNumber']);
         $work->setRequestNumber($_REQUEST['requestNumber']);        
         $work->setVerificator($verificators[$_REQUEST['verificatorId']]);

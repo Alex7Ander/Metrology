@@ -18,16 +18,18 @@
 				<div class="itemSlider">
 					<div class="bgSlide"><img src="images/bg-slide-2.jpg"></div>
 					<div class="descSlide">
-                    <form action="login.php" method="POST">
-                        <div>
-                            <b>Пользователь: </b>
-                            <select name="staffId" style="flaot: right;"><?php foreach($workers as $id=>$worker){echo"<option value='$id'>$worker</option>";}?></select>
+                    <form action="login.php" method="POST" class="questionnaire">
+                        <div class="questionnaire-row">
+                            <b class="questionnaire-cell">Пользователь: </b>
+                            <select name="staffId" class="questionnaire-cell"><?php foreach($workers as $id=>$worker){echo"<option value='$id'>$worker</option>";}?></select>
                         </div>
-                        <div>
-                            <b>Пароль: </b>
-                            <input type="password" name="pass" style="flaot: right;">
+                        <div class="questionnaire-row">
+                            <b class="questionnaire-cell">Пароль: </b>
+                            <input type="password" name="pass" class="questionnaire-cell">
                         </div>
-                        <input type="submit" name="login" value="Войти" class="simpleSubmit">
+                        <div class="questionnaire-row">
+                        	<span class="questionnaire-cell"><input type="submit" name="login" value="Войти" class="simpleSubmit"></span>
+                        </div>
                     </form>
 					</div>
 				</div>

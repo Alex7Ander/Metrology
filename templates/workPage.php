@@ -166,47 +166,75 @@
 		<div class="popup" id="popUpEditMainInfo">
 			<div class="popup-content">
 				<h1 class="simpleBlackText">Редактирование основной информации о задании</h1>
-				<form action="work.php" method="POST">
-              		<input type="hidden" id="modIdInput" name="workId" value="<?=$work->getId()?>">
-              		Тип СИ: <select name="typeId">
-              			<?php 
-              			foreach($types as $id => $type){
-              			    if($work->getDevice()->getDeviceType()->getId() == $id){
-              			        echo "<option value=$id selected>$type</option>";
-              			    }
-              			    else{
-              			        echo "<option value=$id>$type</option>";
-              			    }
-              			}
-              			?>
-              		</select><br>
-              		Серийный номер: <input type="text" name="serialNumber" value="<?=$work->getDevice()->getSerialNumber()?>"><br>
-              		Номер заявки: <input type="text" name="requestNumber" value="<?=$work->getRequestNumber()?>"c><br>
-              		Номер счета: <input type="text" name="accountNumber" value="<?=$work->getAccountNumber()?>"><br>
-              		Поверитель:<select name="verificatorId"><br>
-              		    <?php 
-              			foreach($verificators as $id => $verificator){
-              			    if($work->getVerificator()->getId() == $id){
-              			        echo "<option value='$id' selected>$verificator</option>";
-              			    }
-              			    else{
-              			        echo "<option value='$id'>$verificator</option>";
-              			    }
-              			}
-              			?>
-              		</select><br>
-              		Ответственный за закрытие работы:<select name="managerId">
-              			<?php 
-              			foreach($managers as $id => $manager){
-              			    if($work->getManager()->getId() == $id){
-              			        echo "<option value='$id' selected>$manager</option>";
-              			    }
-              			    else{
-              			        echo "<option value='$id'>$manager</option>";
-              			    }
-              			}
-              			?>
-              		</select><br>
+				<form action="work.php" method="POST" class="questionnaire">
+					<label class="questionnaire-row">
+						<span class="questionnaire-cell">№ задания:</span>
+						<span class="questionnaire-cell"><input type="text" name="workIndex" value="<?=$work->getWorkIndex()?>"></span>
+					</label>
+					<label class="questionnaire-row">
+						<input type="hidden" id="modIdInput" name="workId" value="<?=$work->getId()?>">
+						<span class="questionnaire-cell">Тип СИ:</span>
+						<span class="questionnaire-cell">
+		              		 <select name="typeId">
+                      			<?php 
+                      			foreach($types as $id => $type){
+                      			    if($work->getDevice()->getDeviceType()->getId() == $id){
+                      			        echo "<option value=$id selected>$type</option>";
+                      			    }
+                      			    else{
+                      			        echo "<option value=$id>$type</option>";
+                      			    }
+                      			}
+                      			?>
+                      		</select>
+						</span>
+					</label>
+					<label class="questionnaire-row">
+						<span class="questionnaire-cell">Серийный номер:</span>
+						<span class="questionnaire-cell"><input type="text" name="serialNumber" value="<?=$work->getDevice()->getSerialNumber()?>"></span>
+					</label>
+					<label class="questionnaire-row">
+						<span class="questionnaire-cell">Номер заявки:</span>
+						<span class="questionnaire-cell"><input type="text" name="requestNumber" value="<?=$work->getRequestNumber()?>"></span>
+					</label>
+					<label class="questionnaire-row">
+						<span class="questionnaire-cell">Номер счета:</span>
+						<span class="questionnaire-cell"><input type="text" name="accountNumber" value="<?=$work->getAccountNumber()?>"></span>
+					</label>               		 
+					<label class="questionnaire-row">
+						<span class="questionnaire-cell">Поверитель:</span>
+						<span class="questionnaire-cell">
+							<select name="verificatorId">
+                      		    <?php 
+                      			foreach($verificators as $id => $verificator){
+                      			    if($work->getVerificator()->getId() == $id){
+                      			        echo "<option value='$id' selected>$verificator</option>";
+                      			    }
+                      			    else{
+                      			        echo "<option value='$id'>$verificator</option>";
+                      			    }
+                      			}
+                      			?>
+              				</select>
+						</span>
+					</label>
+					<label class="questionnaire-row">
+						<span class="questionnaire-cell">Ответственный за закрытие работы:</span>
+						<span class="questionnaire-cell">
+                      		<select name="managerId">
+                      			<?php 
+                      			foreach($managers as $id => $manager){
+                      			    if($work->getManager()->getId() == $id){
+                      			        echo "<option value='$id' selected>$manager</option>";
+                      			    }
+                      			    else{
+                      			        echo "<option value='$id'>$manager</option>";
+                      			    }
+                      			}
+                      			?>
+                      		</select>
+						</span>
+					</label>
               		<input type="submit" class="simpleSubmit" name="editMainInfo" value="Редактировать">
               	</form>
 				<input type="button" class="simpleSubmit" value="Отмена" onclick='hidePopUp("popUpEditMainInfo");'>

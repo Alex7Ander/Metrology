@@ -722,6 +722,19 @@ ul.clock li {
 	color: #000;
 }
 
+.questionnaire{
+	display: table;
+}
+
+.questionnaire-row{
+	display: table-row;
+	
+}
+
+.questionnaire-cell{
+	display: table-cell;
+}
+
 .popup{
     width:100%;
     min-height:100%;

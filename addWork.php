@@ -34,10 +34,11 @@ $types = $typesRepo->getAll();
 
 if(isset($_REQUEST['save'])){  
     $type = $types[$_REQUEST['type_id']];
-    $serialNumber = $_REQUEST['device_serial_number'];                        
+    $serialNumber = $_REQUEST['device_serial_number']; 
+    $prodYear = $_REQUEST['device_prod_year'];
     $device = $deviceRepo->getByTypeAndSerialNumber($type, $serialNumber);
-    if($device == null){
-        $device = new Device($type, $serialNumber);
+    if($device == null){        
+        $device = new Device($type, $serialNumber, $prodYear);
         $deviceRepo->save($device);
     }
 
@@ -49,7 +50,7 @@ if(isset($_REQUEST['save'])){
     $work = new Work();                     
     $work->setDevice($device);
     $work->setVerificator($verificator);
-    $work->setManager($manager);                        
+    $work->setManager($manager); 
     $work->setRequestNumber($_REQUEST['request_number']);
     $work->setAccountNumber($_REQUEST['account_number']);
     $work->setVerificationDate($_REQUEST['verification_date']);

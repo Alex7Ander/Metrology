@@ -116,6 +116,8 @@ if($work){
     $t = $work->getTemperature();
     $h = $work->getHumidity();
     $p = $work->getPreasure();
+    $protocolName = "Протокол поверки " . $work->getDevice()->getDeviceType() . " " . $work->getDevice()->getSerialNumber() . " (от " .  $work->getVerificationDate() . ").doc";
+    $docName = $work->getDevice()->getDeviceType() . " №" . $work->getDevice()->getSerialNumber() . " (от " .  $work->getVerificationDate() . ")";
     if($work->getProtocolLink()){
         $protocolDownloadingLink = $ydUploader->getDownloadingLink($work->getProtocolLink());
     }

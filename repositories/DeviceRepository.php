@@ -40,6 +40,10 @@ class DeviceRepository{
         }                  
     }
     
+    public function modify($device){
+        
+    }
+    
     public function delete($device){
         if(!($device instanceof Device)){
             die("Error: wrong type of parametr in method save (class DeviceRepository)");

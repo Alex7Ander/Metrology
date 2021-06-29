@@ -5,16 +5,17 @@ require_once './repositories/StaffRepository.php';
 
 session_start();
 $staffRepo = new StaffRepository($host, $user, $password, $database);
-$workers = $staffRepo->getAll();
+$staff = $staffRepo->getAll();
 
 if(isset($_POST['login'])){
     $staffId = $_POST['staffId'];
     $pass = $_POST['pass'];
     
-    $currentWorker = $workers[$staffId];
-    if($currentWorker->getPass() == $pass){
-        $_SESSION['username'] = $currentWorker->getFullName();
-        $_SESSION['accessLevel'] = $currentWorker->getAccessLevel();
+    $currentStaffPerson = $staff[$staffId];
+    if($currentStaffPerson->getPass() == $pass){
+        $_SESSION['username'] = $currentStaffPerson->getFullName();
+        $_SESSION['userId'] = $currentStaffPerson->getId();
+        $_SESSION['accessLevel'] = $currentStaffPerson->getAccessLevel();
         header('Location: index.php');
     }
 }

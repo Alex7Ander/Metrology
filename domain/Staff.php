@@ -73,4 +73,3 @@ class Staff{
         return $this->surname . " " . $this->name . " " . $this->patronimyc;
     }
 }
-?>

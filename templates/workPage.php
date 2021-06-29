@@ -39,7 +39,7 @@
 			</div>
 			<div class="main">
 				<div class="leftCol">
-					<h2>Основная информация</h2>
+					<h1>Основная информация</h1>
 					<p>Прибор: <i><?=$currentDevice?></i></p>
 					<p>Номер заявки: <i><?=$currentRequestNumber?></i></p>
                     <p>Номер счета: <i><?=$currentAccountNumber?></i></p>
@@ -58,6 +58,7 @@
             		    <!-- Taken -->
             			<input type='hidden' name='processMods[taken]' value='0'><br>
                 		<label><input type='checkbox' name='processMods[taken]' value='1' <?php if($work->isTaken()) echo "checked";?>>Прибор принят в работу</label><br>
+                		
                 		<!-- Measured -->
                 		<input type='hidden' name='processMods[measured]' value='0'><br>
                 		<label><input type='checkbox' name='processMods[measured]' value='1' <?php if($work->isMeasured()) echo"checked";?>>Измерения проведены при следующих характеристиках окружающей среды</label><br>
@@ -86,23 +87,44 @@
                             	}
                         	?>
                     	</select>
+                    	
                     	<!-- Protocol -->
                 		<input type='hidden' name='processMods[processed]' value='0'><br>
             			<label><input type='checkbox' id='protocolCheckbox' name='processMods[processed]' value='1' <?php if($work->isProcessed()) echo"checked";?>>Протокол поверки создан</label><br>                		
-            			<?php if(isset($protocolDownloadingLink)){echo "<a href=$protocolDownloadingLink download=''>Протокол</a>";}?>
+            			<?php 
+            			if(isset($protocolDownloadingLink)){
+            			    //echo "<a href=$protocolDownloadingLink download=''>Протокол</a>";
+            			    //echo "<input type='button' class='simpleSubmit' value='Protocol downloading' onclick='loadFile('$protocolDownloadingLink', '$yandexDiskToken', '$protocolName')'>";
+            			?>
+            			<input type='button' class='simpleSubmit' value='Скачать протокол' onclick='loadFile("<?= $protocolDownloadingLink?>", "<?= $yandexDiskToken?>", "<?= $protocolName?>")'>            			    
+            			<?php
+            			}
+            			?>
             			<input name='protocol' id='protocolInput' type='file'/><br>
+            			
                 		<!-- Metrology closing -->
-            			<input type='hidden' name='processMods[metrologyClosed]' value='0'><br>
-            			<label><input type='checkbox' name='processMods[metrologyClosed]' value='1' <?php if($work->isMetrologyClosed()) echo"checked";?>>Работа закрыта в метрологии</label><br>
+                		<div>
+            				<input type='hidden' name='processMods[metrologyClosed]' value='0'>
+            				<label><input type='checkbox' name='processMods[metrologyClosed]' value='1' <?php if($work->isMetrologyClosed()) echo"checked";?>>Работа закрыта в метрологии</label>
+                		</div>
+                		
                 		<!-- Doc number -->
-            			<input type='hidden' name='processMods[numberTaken]' value='0'><br>
-            			<label><input type='checkbox' name='processMods[numberTaken]' id='numberTaken' value='1' <?php if($work->getDocumentNumber()) echo"checked";?>>Получен номер из системы Аршин</label>
-            			<input type='text' name='documentNumber' <?php if($work->getDocumentNumber()) echo "value = {$work->getDocumentNumber()}";?>><br>
+                		<div>
+            				<input type='hidden' name='processMods[numberTaken]' value='0'>
+            				<label><input type='checkbox' name='processMods[numberTaken]' id='numberTaken' value='1' <?php if($work->getDocumentNumber()) echo"checked";?>>Получен номер из системы Аршин</label>
+            				<input type='text' name='documentNumber' <?php if($work->getDocumentNumber()) echo "value = {$work->getDocumentNumber()}";?>>
+                		</div>
+                		
                 		<!-- Doc printed -->
-            			<input type='hidden' name='processMods[documentPrinted]' value='0'><br>                		
-            			<label><input type='checkbox' id='docCheckbox' name='processMods[documentPrinted]' value='1' <?php if($work->isDocumentPrinted()) echo"checked";?>>Свидетельство / извещение выписано</label><br>                		
-            			<?php if(isset($documentDownloadingLink)){echo "<a href='$documentDownloadingLink' download=''>Документ</a>";}?>
-            			<input name='document' id='docInput'  type='file'/><br>
+                		<div>
+                			<input type='hidden' name='processMods[documentPrinted]' value='0'><br>                		
+            				<label><input type='checkbox' id='docCheckbox' name='processMods[documentPrinted]' value='1' <?php if($work->isDocumentPrinted()) echo"checked";?>>Свидетельство / извещение выписано</label><br>                		
+							<?php if(isset($documentDownloadingLink)){?>
+            				<input type='button' class='simpleSubmit' value='Скачать документ' onclick='loadFile("<?= $documentDownloadingLink?>", "<?= $yandexDiskToken?>", "<?= $docName?>")'>            			    
+            				<?php }?>
+            				<input name='document' id='docInput'  type='file'/><br>
+                		</div>
+                		
                 		<!-- Given away -->
             			<input type='hidden' name='processMods[givenAway]' value='0'><br>
             			<label><input type='checkbox' name='processMods[givenAway]' value='1' <?php if($work->isGivenAway()) echo"checked";?>>Прибор отдан</label><br>

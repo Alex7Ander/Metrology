@@ -149,24 +149,34 @@ class WorkRepository{
             die("Error: wrong type of parametr in method getByExample (class workRepository)");
         }
         $exVerificatorId = '';
-        if($work->getVerificator() != null){
+        if($work->getVerificator() != NULL){
             $exVerificatorId = $work->getVerificator()->getId();
         }
         $exManagerId = '';
-        if($work->getManager() != null){
+        if($work->getManager() != NULL){
             $exManagerId = $work->getManager()->getId();
         }
-        $exDeviceId = '';
-        if($work->getDevice() != null){
-            $exDeviceId = $work->getDevice()->getId(); 
-        }       
+        $deviceTypeId = '';
+        $deviceSerialNumber = '';
+        if($work->getDevice() != NULL){
+            $deviceTypeId = $work->getDevice()->getDeviceType()->getId();
+            $deviceSerialNumber = $work->getDevice()->getSerialNumber();
+        }
+
         $query = "SELECT * FROM works WHERE request_number LIKE '%{$work->getRequestNumber()}%' 
                     AND account_number LIKE '%{$work->getAccountNumber()}%' 
                     AND work_index LIKE '%{$work->getWorkIndex()}%' 
                     AND standart_type LIKE '%{$work->getStandartType()}%' 
                     AND verificator_id LIKE '%$exVerificatorId%' 
-                    AND manager_id LIKE '%$exManagerId%' 
-                    AND device_id IN (select id from devices where device_type_id = '{$work->getDevice()->getDeviceType()->getId()}')";
+                    AND manager_id LIKE '%$exManagerId%' "; 
+        if($work->getDevice() != NULL){
+            if($work->getDevice()->getSerialNumber() == "0"){
+                $query = $query . "AND device_id IN (select id from devices where device_type_id LIKE '%$deviceTypeId%')";
+            }
+            else{
+                $query = $query . "AND device_id = (select id from devices where device_type_id='$deviceTypeId' AND serial_number='$deviceSerialNumber')";
+            }
+        }
         $result = $this->mysqli->query($query);
         $works = $this->getWorksFromResult($result);
         $result->close();
@@ -205,8 +215,8 @@ class WorkRepository{
             $verificatorId = $value['verificator_id'];
             $managerId = $value['manager_id'];
             $device = $this->deviceRepo->getById($deviceId);
-            $verificator = $this->staffRepo->getWorkerById($verificatorId);
-            $manager = $this->staffRepo->getWorkerById($managerId);
+            $verificator = $this->staffRepo->getById($verificatorId);
+            $manager = $this->staffRepo->getById($managerId);
             $requestNumber = $value['request_number'];
             $accountNumber = $value['account_number'];
             

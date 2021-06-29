@@ -79,29 +79,32 @@
                             <th>Ф.И.О.</th>
                             <th>Поверитель</th>
                             <th>Менеджер</th>
+                            <th>Подробнее</th>
                         </tr>
                         </thead>
                         <tbody>
                         <?php
-                            $index = 1;
-                            foreach($staff as $worker){
-                                echo "<tr>";
-                                echo "<td>$index</td>";
-                                echo "<td>{$worker->getFullName()}</td>";
-
-                                $isverificator = "-";
-                                $ismanager = "-";                                
-                                if($worker->getVerificatorStatus()){
-                                    $isverificator = "+";
-                                }
-                                if($worker->getManagerStatus()){
-                                    $ismanager = "+";
-                                }
-                                echo "<td>$isverificator</td>";
-                                echo "<td>$ismanager</td>";
-                                echo "</tr>";
-                                $index++;                                
+                        $index = 1;
+                        foreach($staff as $staffPerson){
+                            $isverificator = "-";
+                            $ismanager = "-";
+                            if($staffPerson->getVerificatorStatus()){
+                                $isverificator = "+";
                             }
+                            if($staffPerson->getManagerStatus()){
+                                $ismanager = "+";
+                            }
+                        ?>
+                        <tr>
+							<td><?=$index?></td>
+                            <td><?=$staffPerson->getFullName()?></td>
+                            <td><?=$isverificator?></td>
+                            <td><?=$ismanager?></td>
+                            <td><input type="button" value="Подробнее" class="simpleSubmit" onclick="document.location='personal.php?staffId=<?=$staffPerson->getId()?>'"></td>
+						</tr>
+                        <?php        
+                            $index++;                                
+                        }
                         ?>
                         </tbody>
                     </table>

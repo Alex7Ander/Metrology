@@ -33,12 +33,14 @@ if(isset($_REQUEST['search'])){
     $exampleWork->setAccountNumber($_REQUEST['accountNumber']);
     $exampleWork->setStandartType($_REQUEST['standartType']);
     
-    $exDevice = new Device($types[$_REQUEST['typeId']]);
-    $exampleWork->setDevice($exDevice);
+    if($_REQUEST['typeId'] != ""){
+        $exDevice = new Device($types[$_REQUEST['typeId']]);
+        $exampleWork->setDevice($exDevice);
+    }       
     
-    $exManager = $staffRepo->getWorkerById($_REQUEST['managerId']);
+    $exManager = $staffRepo->getById($_REQUEST['managerId']);
     $exampleWork->setManager($exManager);
-    $exVarificator = $staffRepo->getWorkerById($_REQUEST['verificatorId']);
+    $exVarificator = $staffRepo->getById($_REQUEST['verificatorId']);
     $exampleWork->setVerificator($exVarificator);
     $works = $workRepo->getByExample($exampleWork);
 }

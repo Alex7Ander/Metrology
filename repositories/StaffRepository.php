@@ -11,6 +11,11 @@ class StaffRepository{
         $this->mysqli->set_charset('utf8');
     }
     
+    
+    /*
+     Приложение расчитано на очень малое число пользователей (~10 человек) из определенной группы
+     Свободной регистрации не предусматривает, поэтому предполагаем, что полных тёзок среди пользователей не будет 
+     * */
     public function save(Staff $staff){
         $this->mysqli->begin_transaction();
         try{
@@ -19,6 +24,7 @@ class StaffRepository{
             $row = $result->fetch_assoc();
             $count = $row['staffCount'];
             if($count > 0){
+                $this->mysqli->rollback();
                 throw new Exception("Пользователь с такими именем, фамилий и отчеством уже зарегитсрирован.");
             }
             $query = "INSERT INTO staff (name, surname, patronimyc, verificator_status, manager_status, pass, access_level)
@@ -35,6 +41,27 @@ class StaffRepository{
             throw $exception;
         }        
     }
+    
+    public function modify(Staff $staff){
+        $this->mysqli->begin_transaction();
+        try{
+            $query = "SELECT COUNT(*) AS staffCount FROM staff WHERE name='{$staff->getName()}' AND surname='{$staff->getSurname()}' AND patronimyc='{$staff->getPatronimyc()}'";
+            $result = $this->mysqli->query($query);
+            $row = $result->fetch_assoc();
+            $count = $row['staffCount'];
+            if($count > 0){
+                $this->mysqli->rollback();
+                throw new Exception("Пользователь с такими именем, фамилий и отчеством уже зарегитсрирован.");
+            }
+            $query = "UPDATE staff SET name='{$staff->getName()}', surname='{$staff->getSurname()}', patronimyc='{$staff->getPatronimyc()}', pass='{$staff->getPass()}' WHERE id='{$staff->getId()}'";
+            $this->mysqli->query($query);
+            $this->mysqli->commit();
+        }
+        catch(mysqli_sql_exception $exception){
+            $this->mysqli->rollback();
+            throw $exception;
+        }
+    }
 
     public function getAll(){
         $query = "SELECT * FROM staff";
@@ -44,7 +71,7 @@ class StaffRepository{
         return $workers;
     }
     
-    public function getWorkerById($id){
+    public function getById($id){
         $query = "SELECT COUNT(*) AS workersCount FROM staff WHERE id='$id'";
         $result = $this->mysqli->query($query);
         $row = $result->fetch_assoc();

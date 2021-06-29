@@ -21,7 +21,7 @@
                     <form action="login.php" method="POST" class="questionnaire">
                         <div class="questionnaire-row">
                             <b class="questionnaire-cell">Пользователь: </b>
-                            <select name="staffId" class="questionnaire-cell"><?php foreach($workers as $id=>$worker){echo"<option value='$id'>$worker</option>";}?></select>
+                            <select name="staffId" class="questionnaire-cell"><?php foreach($staff as $id=>$staffPerson){echo"<option value='$id'>$staffPerson</option>";}?></select>
                         </div>
                         <div class="questionnaire-row">
                             <b class="questionnaire-cell">Пароль: </b>

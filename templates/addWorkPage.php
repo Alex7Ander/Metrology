@@ -87,6 +87,10 @@
 								<td><input type="text" name="device_serial_number"></td>
 							</tr>
 							<tr>
+								<td>Год выпуска:</td>
+								<td><input type="text" name="device_prod_year"></td>
+							</tr>
+							<tr>
 								<td>Место в поверочной схеме:</td>
 								<td>
 									<select name="standart_type">

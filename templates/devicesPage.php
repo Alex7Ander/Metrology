@@ -72,7 +72,7 @@
                 		      echo "<tr>";
                 		      echo "<td>$index</td>";
                 		      echo "<td>{$device->getDeviceType()}</td>";
-                		      echo "<td>{$device->getSerialNumber()}</td>";
+                		      echo "<td><a href='single_device.php?deviceId=$id'>{$device->getSerialNumber()}</a></td>";
                 		      echo "<td><input type='button' value='Удалить' onclick='setInfo($id)' class='simpleSubmit'></td>";
                 		      echo "</tr>";
                 		      $index++;

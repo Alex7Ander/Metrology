@@ -1,0 +1,10 @@
+{
+    "name": "alexander/metrology_app",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Alex7Ander",
+        }
+    ],
+    "require": {}
+}

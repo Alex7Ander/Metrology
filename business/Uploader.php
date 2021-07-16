@@ -81,8 +81,32 @@ class Uploader{
         return $res['href'];
     }
     
+    public function downloadFile($ydPath, $pathTo){                  
+        $ch = curl_init('https://cloud-api.yandex.net/v1/disk/resources/download?path=' . urlencode($ydPath));        
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth ' . $this->token));        
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);        
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);        
+        curl_setopt($ch, CURLOPT_HEADER, false);        
+        $res = curl_exec($ch);        
+        curl_close($ch);
+        $res = json_decode($res, true); 
+        var_dump($res);
+        if (empty($res['error'])) {            
+            $file_name = $pathTo . '/' . basename($ydPath);            
+            $file = fopen($file_name, 'w');            
+            $ch = curl_init($res['href']);             
+            curl_setopt($ch, CURLOPT_FILE, $file);            
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth ' . $this->token));            
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);            
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);            
+            curl_setopt($ch, CURLOPT_HEADER, false);            
+            curl_exec($ch);            
+            curl_close($ch);            
+            fclose($file);            
+        }
+    }
+    
     public function delete($path){
-        echo "$path<br>";
         $ch = curl_init('https://cloud-api.yandex.net/v1/disk/resources?path=' . urlencode($path) . '&permanently=true');        
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');        
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth ' . $this->token));        

@@ -93,11 +93,7 @@
             			<label><input type='checkbox' id='protocolCheckbox' name='processMods[processed]' value='1' <?php if($work->isProcessed()) echo"checked";?>>Протокол поверки создан</label><br>                		
             			<?php 
             			if(isset($protocolDownloadingLink)){
-            			    //echo "<a href=$protocolDownloadingLink download=''>Протокол</a>";
-            			    //echo "<input type='button' class='simpleSubmit' value='Protocol downloading' onclick='loadFile('$protocolDownloadingLink', '$yandexDiskToken', '$protocolName')'>";
-            			?>
-            			<input type='button' class='simpleSubmit' value='Скачать протокол' onclick='loadFile("<?= $protocolDownloadingLink?>", "<?= $yandexDiskToken?>", "<?= $protocolName?>")'>            			    
-            			<?php
+            			    echo("<a href='$protocolDownloadingLink' rel='noreferrer'> Ссылка на протокол </a>");
             			}
             			?>
             			<input name='protocol' id='protocolInput' type='file'/><br>
@@ -119,9 +115,10 @@
                 		<div>
                 			<input type='hidden' name='processMods[documentPrinted]' value='0'><br>                		
             				<label><input type='checkbox' id='docCheckbox' name='processMods[documentPrinted]' value='1' <?php if($work->isDocumentPrinted()) echo"checked";?>>Свидетельство / извещение выписано</label><br>                		
-							<?php if(isset($documentDownloadingLink)){?>
-            				<input type='button' class='simpleSubmit' value='Скачать документ' onclick='loadFile("<?= $documentDownloadingLink?>", "<?= $yandexDiskToken?>", "<?= $docName?>")'>            			    
-            				<?php }?>
+							<?php if(isset($documentDownloadingLink)){
+							    echo("<a href='$documentDownloadingLink' rel='noreferrer'> Ссылка на документ </a>");
+							}
+           			        ?>
             				<input name='document' id='docInput'  type='file'/><br>
                 		</div>
                 		

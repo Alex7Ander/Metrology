@@ -116,14 +116,19 @@ if($work){
     $t = $work->getTemperature();
     $h = $work->getHumidity();
     $p = $work->getPreasure();
+    
     $protocolName = "Протокол поверки " . $work->getDevice()->getDeviceType() . " " . $work->getDevice()->getSerialNumber() . " (от " .  $work->getVerificationDate() . ").doc";
     $docName = $work->getDevice()->getDeviceType() . " №" . $work->getDevice()->getSerialNumber() . " (от " .  $work->getVerificationDate() . ")";
+    
+    
     if($work->getProtocolLink()){
         $protocolDownloadingLink = $ydUploader->getDownloadingLink($work->getProtocolLink());
+        //$http_code = $ydUploader->downloadFile($work->getProtocolLink(), "temp");   
+        //$protocolDownloadingLink = "/temp/" . basename($work->getProtocolLink());
     }
     if($work->getDocumentLink()){
         $documentDownloadingLink = $ydUploader->getDownloadingLink($work->getDocumentLink());
-    }    
+    }     
 }
 
 include "./templates/workPage.php";

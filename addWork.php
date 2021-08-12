@@ -58,7 +58,9 @@ if(isset($_REQUEST['save'])){
     $work->setTemperature($_REQUEST['temperature']);
     $work->setHumidity($_REQUEST['humidity']);
     $work->setPreasure($_REQUEST['preasure']);
-
+    $work->setResult($_REQUEST['result']);
+    $work->setType($_REQUEST['work_type']);
+    
     if(isset($_FILES['protocol'])){
         $pathFrom = $_FILES['protocol']['tmp_name'];
         if($pathFrom != ''){

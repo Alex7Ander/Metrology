@@ -52,7 +52,17 @@
 				</div>
 
 				<div class="rightCol">
-					<h1>Задание на поверку № <?=$currentWorkIndex?></h1>
+					<h1>Задание на  
+    					<?php 
+    					if($work->getType() == "Поверка"){
+    					    echo " поверку ";
+    					}
+                        elseif ($work->getType() == "Калибровка") {
+                            echo " калибровку ";
+                        }
+                        echo "№ {$work->getWorkIndex()}";
+    					?>
+					</h1>
             		<h3>Ход выполнения работы</h3>
             		<form method='POST' action='' enctype='multipart/form-data'>
             		    <!-- Taken -->
@@ -74,7 +84,20 @@
                                 <td><input type='text' name='inv[h]' value='<?=$h?>'></td>
                             </tr>
                     	</table>
-                    	<p>И на основании результатов поверки определено место по поверочной схеме как:</p>
+                    	<p>И на основании результатов поверки прибор</p>
+                    	<select name="result" id="result">
+                    	<?php 
+                    	    if($work->getResult() == 1){
+                    	        echo "<option value='1' selected>Годен</option>";
+                    	        echo "<option value='0'>Не годен</option>";
+                    	    }
+                    	    else{
+                    	        echo "<option value='1'>Годен</option>";
+                    	        echo "<option value='0' selected>Не годен</option>";
+                    	    }
+                    	?>
+                    	</select>
+                    	<p>Место в поверочной схеме: </p>
                         <select name="standart_type">
                         	<?php 
                             	foreach($standartTypes as $type){
@@ -129,48 +152,14 @@
             		</form>
 				</div>
 			</div>
+			
 			<div class="footer">
 				<div class="footerContent">
-					<div class="span1">
-						<h1>Sed ut</h1>
-						<div class="borderBottom"></div>
-						<p>Lorem ipsum dolor sit</p>
-						<ul class="clock">
-							<li>Nights! Absolutely No Extra Charge</li>
-							<li>Weekends! Absolutely No Extra Charge</li>
-							<li>Holidays! Absolutely No Extra Charge</li>
-						</ul>
-						<div class="social">
-							<div>Мы в социальных сетях: </div><ul><li><a target="newtab" href="http://www.facebook.com/?sk=app_2309869772"><img src="images/facebook.png"></a></li><li><a target="newtab" href="https://twitter.com/psdhtmlcss"><img src="images/twitter.png" /></a></li><li><img src="images/vk.png" /></li></ul>
-						</div>
-					</div>
-					<div class="span1">
-						<h1>At vero eos</h1>
-						<div class="borderBottom"></div>
-						<p>Lorem ipsum dolor sit</p>
-						<ul>
-							<li>West Hollywood (323) 221-1107</li>
-							<li>Beverly Hills (310) 202-5428</li>
-							<li>Pasadena (626) 296-2664</li>
-							<li>West Hollywood (323) 221-1107</li>
-							<li>Beverly Hills (310) 202-5428</li>
-						</ul>
-						<p><strong>Lorem ipsum dolor sit amet</strong></p>
-					</div>
-					<div class="span1">
-						<h1>Lorem ipsum dolor</h1>
-						<div class="borderBottom"></div>
-						<p>Lorem ipsum dolor sit</p>
-						<ul class="unstyled">
-							<li>Hi-Tech Cherry Company</li>
-							<li><a href="mailto:psdhtmlcss@mail.ru">infocherry@gmail.com</a></li>
-							<li>5104 W. Washington Blvd</li>
-							<li>Los Angeles , CA , 90016 United States</li>
-						</ul>
-					</div>
+											
 				</div>
 			</div>
 		</div>
+		
 		<div class="popup" id="popUp">
 			<div class="popup-content">
 				<h1 class="simpleBlackText">Вы уверены, что хотите удалить задание на поверку</h1>
@@ -186,6 +175,16 @@
 			<div class="popup-content">
 				<h1 class="simpleBlackText">Редактирование основной информации о задании</h1>
 				<form action="work.php" method="POST" class="questionnaire">
+					<label class="questionnaire-row">
+						<span class="questionnaire-cell">Тип задания:</span>
+						<span class="questionnaire-cell">
+							<select name="work_type">
+								<option>Поверка</option>
+								<option>Калибровка</option>
+							</select>
+						</span>
+					</label>
+
 					<label class="questionnaire-row">
 						<span class="questionnaire-cell">№ задания:</span>
 						<span class="questionnaire-cell"><input type="text" name="workIndex" value="<?=$work->getWorkIndex()?>"></span>

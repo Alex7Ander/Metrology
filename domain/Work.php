@@ -17,6 +17,8 @@ class Work{
     private $documentLink; 
     private $verificator;
     private $manager;
+    private $type;
+    private $result;
     
     private $taken;
     private $measured;
@@ -157,4 +159,17 @@ class Work{
     public function setGivenAway($givenAway){
         $this->givenAway = $givenAway;
     }    
+    public function getType(){
+        return $this->type;
+    }
+    public function setType($type){
+        $this->type = $type;
+    }
+    public function getResult(){
+        return $this->result;
+    }
+    public function setResult($result){
+        $this->result = $result;
+    }
+    
 }

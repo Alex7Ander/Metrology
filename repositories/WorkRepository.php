@@ -56,7 +56,9 @@ class WorkRepository{
                                         metrology_closed, 
                                         document_printed, 
                                         given_away, 
-                                        document_number) 
+                                        document_number, 
+                                        work_type, 
+                                        result) 
                                         VALUES ('{$work->getDevice()->getId()}',
                                                 '$currentWorkVerificatorId', 
                                                 '$currentWorkManagerId', 
@@ -76,7 +78,9 @@ class WorkRepository{
                                                 '{$work->isMetrologyClosed()}',
                                                 '{$work->isDocumentPrinted()}',
                                                 '{$work->isGivenAway()}',
-                                                '{$work->getDocumentNumber()}')";            
+                                                '{$work->getDocumentNumber()}', 
+                                                '{$work->getType()}', 
+                                                '{$work->getResult()}')";            
             $this->mysqli->query($query);                        
             $query = "SELECT id AS newId FROM works WHERE device_id='{$work->getDevice()->getId()}' AND request_number='{$work->getRequestNumber()}' AND account_number='{$work->getAccountNumber()}'";
             $result = $this->mysqli->query($query);            
@@ -116,8 +120,9 @@ class WorkRepository{
                 metrology_closed = {$work->isMetrologyClosed()},
                 document_printed = {$work->isDocumentPrinted()},
                 given_away = {$work->isGivenAway()},
-                document_number = '{$work->getDocumentNumber()}'
-                WHERE id='{$work->getId()}'";
+                document_number = '{$work->getDocumentNumber()}',
+                work_type = '{$work->getType()}',
+                result = {$work->getResult()} WHERE id='{$work->getId()}'";
             $this->mysqli->query($query);
             $this->mysqli->commit();
         }
@@ -245,6 +250,9 @@ class WorkRepository{
             $work->setDocumentNumber($value['document_number']);
             $work->setDocumentPrinted($value['document_printed']);
             $work->setGivenAway($value['given_away']);
+            $work->setType($value['work_type']);
+            $work->setResult($value['result']);
+            
             $works["$id"] = $work;
         }
         return $works;

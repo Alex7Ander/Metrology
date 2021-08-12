@@ -21,6 +21,8 @@ else{
 
 $ydUploader = new Uploader($yandexDiskToken);          
 $standartTypes = Array("Рабочее средство измерения", "Эталон 2-го рязряда", "Эталон 1-го разряда", "Вторичный эталон");
+$results = Array("Годен", "Не годен");
+
 $workId = $_REQUEST["workId"];
 $workRepo = new WorkRepository($host, $user, $password, $database);
 $deviceRepo = new DeviceRepository($host, $user, $password, $database);
@@ -58,7 +60,8 @@ if($work){
         $work->setRequestNumber($_REQUEST['requestNumber']);        
         $work->setVerificator($verificators[$_REQUEST['verificatorId']]);
         $work->setManager($managers[$_REQUEST['managerId']]);
-
+        $work->setType($_REQUEST['work_type']);  
+        
         $workRepo->modify($work);
     }
     
@@ -71,12 +74,14 @@ if($work){
         $work->setMetrologyClosed($mods['metrologyClosed']);		          
         $work->setDocumentNumber($_REQUEST['documentNumber']);
         $work->setDocumentPrinted($mods['documentPrinted']);
-        $work->setGivenAway($mods['givenAway']);		          
+        $work->setGivenAway($mods['givenAway']);
+        $work->setResult($_REQUEST['result']);
+        
         $inv = $_REQUEST['inv'];
         $work->setTemperature($inv['t']);
         $work->setPreasure($inv['p']);
         $work->setHumidity($inv['h']);
-                
+
         //files uploading		         
         //if protocol uploaded		          		          
         if(isset($_FILES['protocol'])){
@@ -123,8 +128,6 @@ if($work){
     
     if($work->getProtocolLink()){
         $protocolDownloadingLink = $ydUploader->getDownloadingLink($work->getProtocolLink());
-        //$http_code = $ydUploader->downloadFile($work->getProtocolLink(), "temp");   
-        //$protocolDownloadingLink = "/temp/" . basename($work->getProtocolLink());
     }
     if($work->getDocumentLink()){
         $documentDownloadingLink = $ydUploader->getDownloadingLink($work->getDocumentLink());
